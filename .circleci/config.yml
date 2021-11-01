@@ -32,9 +32,10 @@ jobs:
       # Ensure Rubocop has linted all Ruby files
       - run: bundle exec rubocop
       # Ensure Prettier+ESLint has been run on all JS files
-      - run:
-          npx prettier "./app/javascript/src/**/*.{js,jsx,json}" && npx eslint
-          "./app/javascript/src/**/*.{js,jsx,json}"
+      # TODO: Enable this test when react is installed in the project
+      # - run:
+      #     npx prettier "./app/javascript/src/**/*.{js,jsx,json}" && npx eslint
+      #     "./app/javascript/src/**/*.{js,jsx,json}"
       # Setup database
       - run: cp config/database.yml.ci config/database.yml
       - run: bundle exec rails db:create db:schema:load --trace
