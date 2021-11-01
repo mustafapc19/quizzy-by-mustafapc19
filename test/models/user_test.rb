@@ -20,4 +20,11 @@ class UserTest < ActiveSupport::TestCase
     assert_not @user.valid?
     assert_equal ["Last name can't be blank"], @user.errors.full_messages
   end
+
+
+  def test_email_should_be_present
+    @user.email = ""
+    assert_not @user.valid?
+    assert_equal ["Email can't be blank"], @user.errors.full_messages
+  end
 end
