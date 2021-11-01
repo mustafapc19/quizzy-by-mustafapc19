@@ -11,6 +11,25 @@
   },
   "version": "0.1.0",
   "devDependencies": {
+    "husky": "^7.0.0",
+    "lint-staged": "^11.2.6",
     "webpack-dev-server": "3.11.2"
+  },
+  "scripts": {
+    "prepare": "husky install"
+  },
+  "lint-staged": {
+    "app/javascript/src/**/*.{js,jsx,json}": [
+      "git add"
+    ],
+    "{package.json,.eslintrc.js,.prettierrc.js}": [
+      "git add"
+    ],
+    "./**/*.rb": [
+      "bundle exec rubocop -a"
+    ],
+    "{Gemfile,Rakefile,config.ru}": [
+      "bundle exec rubocop -a"
+    ]
   }
 }
