@@ -39,5 +39,6 @@
 yarn-debug.log*
 .yarn-integrity
 
-# Ignore fixtures in test
+# Ignore fixtures and report in test
 /test/fixtures
+/test/reports
