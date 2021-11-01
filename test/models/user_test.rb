@@ -74,4 +74,16 @@ class UserTest < ActiveSupport::TestCase
       assert @user.invalid?
     end
   end
+
+  def test_reject_if_email_is_duplicate_case_insensitive_wise
+    @user.email = "SAM@example.com"
+    @user.save!
+
+    test_user = @user.dup
+    test_user.email = "sam@example.com"
+
+    assert_not test_user.valid?
+
+    assert_includes test_user.errors.full_messages, "Email has already been taken"
+  end
 end
