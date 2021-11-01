@@ -24,7 +24,7 @@ class UserTest < ActiveSupport::TestCase
   def test_email_should_be_present
     @user.email = ""
     assert_not @user.valid?
-    assert_equal ["Email can't be blank"], @user.errors.full_messages
+    assert_includes @user.errors.full_messages, "Email can't be blank"
   end
 
   def test_first_name_should_be_of_valid_length
@@ -46,5 +46,12 @@ class UserTest < ActiveSupport::TestCase
     assert_not test_user.valid?
 
     assert_includes test_user.errors.full_messages, "Email has already been taken"
+  end
+
+  def test_email_should_be_saved_in_lowercase
+    uppercase_email = "SAM@EMAIL.COM"
+    @user.email = uppercase_email
+    @user.save!
+    assert_equal uppercase_email.downcase, @user.email
   end
 end
