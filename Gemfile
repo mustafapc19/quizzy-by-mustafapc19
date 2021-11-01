@@ -35,6 +35,10 @@ group :development do
 
   # Spring speeds up development by keeping your application running in the background
   gem 'spring'
+
+  # For code formatting and linting
+  gem "rubocop"
+  gem "rubocop-rails"
 end
 
 group :test do
