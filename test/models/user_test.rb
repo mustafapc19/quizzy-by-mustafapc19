@@ -1,4 +1,6 @@
-require 'test_helper'
+# frozen_string_literal: true
+
+require "test_helper"
 
 class UserTest < ActiveSupport::TestCase
   def setup
@@ -28,13 +30,13 @@ class UserTest < ActiveSupport::TestCase
   end
 
   def test_first_name_should_be_of_valid_length
-    @user.first_name = 'A' * 51
+    @user.first_name = "A" * 51
     assert_not @user.valid?
     assert_equal ["First name is too long (maximum is 50 characters)"], @user.errors.full_messages
   end
 
   def test_last_name_should_be_of_valid_length
-    @user.last_name = 'A' * 51
+    @user.last_name = "A" * 51
     assert_not @user.valid?
     assert_equal ["Last name is too long (maximum is 50 characters)"], @user.errors.full_messages
   end
