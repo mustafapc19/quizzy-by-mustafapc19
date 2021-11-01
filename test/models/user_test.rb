@@ -38,4 +38,13 @@ class UserTest < ActiveSupport::TestCase
     assert_not @user.valid?
     assert_equal ["Last name is too long (maximum is 50 characters)"], @user.errors.full_messages
   end
+
+  def test_user_should_not_be_valid_and_saved_if_email_not_unique
+    @user.save!
+
+    test_user = @user.dup
+    assert_not test_user.valid?
+
+    assert_includes test_user.errors.full_messages, "Email has already been taken"
+  end
 end
