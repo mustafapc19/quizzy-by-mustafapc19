@@ -32,4 +32,10 @@ class UserTest < ActiveSupport::TestCase
     assert_not @user.valid?
     assert_equal ["First name is too long (maximum is 50 characters)"], @user.errors.full_messages
   end
+
+  def test_last_name_should_be_of_valid_length
+    @user.last_name = 'A' * 51
+    assert_not @user.valid?
+    assert_equal ["Last name is too long (maximum is 50 characters)"], @user.errors.full_messages
+  end
 end
