@@ -88,4 +88,8 @@ class UserTest < ActiveSupport::TestCase
 
     assert_includes test_user.errors.full_messages, "Email has already been taken"
   end
+
+  def test_user_should_have_a_valid_role
+    assert @user.standard?
+  end
 end
