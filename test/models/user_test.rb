@@ -4,7 +4,9 @@ require "test_helper"
 
 class UserTest < ActiveSupport::TestCase
   def setup
-    @user = User.new(first_name: "Sam", last_name: "Smith", email: "sam@example.com")
+    @user = User.new(
+      first_name: "Sam", last_name: "Smith", email: "sam@example.com", password: "password",
+      password_confirmation: "password")
   end
 
   def test_user_should_be_valid
@@ -91,5 +93,11 @@ class UserTest < ActiveSupport::TestCase
 
   def test_user_should_have_a_valid_role
     assert @user.standard?
+  end
+
+  def test_user_should_not_be_saved_with_blank_password
+    @user.password = nil
+    assert_not @user.save
+    assert_includes @user.errors.full_messages, "Password can't be blank"
   end
 end
