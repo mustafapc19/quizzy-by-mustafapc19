@@ -14,6 +14,9 @@ gem "webpacker", "~> 5.0"
 # database
 gem "sqlite3", "~> 1.4"
 
+# database in production
+gem "pg", group: [:production]
+
 # Adds react to rails
 gem "react-rails"
 
