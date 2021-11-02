@@ -7,6 +7,7 @@ end
 
 desc "Populates sample data without resetting the database first"
 task populate_sample_data: [:environment] do
+  create_sample_data!
   puts "sample data has been added."
 end
 
@@ -34,4 +35,19 @@ def delete_all_records_from_all_tables
   else
     Rake::Task["db:schema:load"].invoke
   end
+end
+
+def create_sample_data!
+  create_user! email: "sam@example.com", role: "administrator"
+end
+
+def create_user!(options = {})
+  user_attributes = {
+    password: "welcome",
+    password_confirmation: "welcome",
+    first_name: "Sam",
+    last_name: "Smith"
+  }
+  attributes = user_attributes.merge options
+  User.create! attributes
 end
