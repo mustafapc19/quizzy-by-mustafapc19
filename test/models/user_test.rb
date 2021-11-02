@@ -100,4 +100,11 @@ class UserTest < ActiveSupport::TestCase
     assert_not @user.save
     assert_includes @user.errors.full_messages, "Password can't be blank"
   end
+
+  def test_password_should_have_a_min_length
+    @user.password = "a"
+
+    assert_not @user.save
+    assert_includes @user.errors.full_messages, "Password is too short (minimum is 6 characters)"
+  end
 end
