@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 
+import { Toastr } from "bigbinary";
+
 import authApi from "apis/auth";
 import { setAuthHeaders } from "apis/axios";
 import LoginForm from "components/Authentication/Form/LoginForm";
@@ -27,6 +29,7 @@ const Login = () => {
       window.location.href = "/";
     } catch (error) {
       logger.error(error);
+      Toastr.error(Error("Login failed!"));
       setLoading(false);
     }
   };

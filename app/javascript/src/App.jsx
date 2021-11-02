@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 
-import { Button } from "bigbinary";
+import { Button, Toastr } from "bigbinary";
 import { either, isEmpty, isNil } from "ramda";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
 
 import authApi from "apis/auth";
 import { setAuthHeaders } from "apis/axios";
@@ -40,6 +41,7 @@ const App = () => {
       window.location.href = "/";
       setIsLoggedIn(false);
     } catch (error) {
+      Toastr.error(Error("Some error occured!"));
       logger.error(error);
     }
   };
@@ -70,6 +72,7 @@ const App = () => {
             component={Dashboard}
           />
         </Switch>
+        <ToastContainer />
       </Router>
     </div>
   );
