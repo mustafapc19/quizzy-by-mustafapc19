@@ -95,6 +95,12 @@ class UserTest < ActiveSupport::TestCase
     assert @user.standard?
   end
 
+  def test_user_should_not_have_an_invalid_role
+    assert_raises ArgumentError do
+      @user.role = "invalid_role"
+    end
+  end
+
   def test_user_should_not_be_saved_with_blank_password
     @user.password = nil
     assert_not @user.save
