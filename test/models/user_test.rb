@@ -107,4 +107,10 @@ class UserTest < ActiveSupport::TestCase
     assert_not @user.save
     assert_includes @user.errors.full_messages, "Password is too short (minimum is 6 characters)"
   end
+
+  def test_user_should_have_matching_password_and_password_confirmation
+    @user.password_confirmation = @user.password + "extra"
+    assert_not @user.save
+    assert_includes @user.errors.full_messages, "Password confirmation doesn't match Password"
+  end
 end
