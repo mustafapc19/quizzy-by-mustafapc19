@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-import { Toastr } from "bigbinary";
+import { Toastr } from "neetoui";
 import { either, isEmpty, isNil } from "ramda";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { ToastContainer } from "react-toastify";

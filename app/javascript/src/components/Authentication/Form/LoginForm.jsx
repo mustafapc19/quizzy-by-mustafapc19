@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Button, Input } from "bigbinary";
+import { Button, Input } from "neetoui";
 import PropTypes from "prop-types";
 
 const LoginForm = ({ handleSubmit, setEmail, setPassword }) => {

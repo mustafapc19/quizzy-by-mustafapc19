@@ -1,9 +1,8 @@
 import React from "react";
 
-import { Button } from "bigbinary";
+import { Button } from "neetoui";
+import { Header } from "neetoui/layouts";
 import PropTypes from "prop-types";
-
-import { Header } from "bigbinary/layouts";
 
 const NavBar = ({ userData, isLoggedIn, handleLogout }) => {
   return (
