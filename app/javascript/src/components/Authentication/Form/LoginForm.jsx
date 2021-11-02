@@ -6,7 +6,7 @@ import PropTypes from "prop-types";
 const LoginForm = ({ handleSubmit, setEmail, setPassword }) => {
   return (
     <div
-      className="flex items-center justify-center min-h-screen
+      className="flex items-center justify-center
       px-4 py-12 lg:px-8 bg-gray-50 sm:px-6"
     >
       <div className="w-full max-w-md">
