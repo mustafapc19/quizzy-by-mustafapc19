@@ -4,6 +4,7 @@ class User < ApplicationRecord
   enum role: { standard: "standard", administrator: "administrator" }, _default: :standard
 
   has_secure_password
+  has_secure_token :authentication_token
 
   validates :email, presence: true, uniqueness: true, format: { with: Constants::VALID_EMAIL_REGEX }
   validates :first_name, presence: true, length: { maximum: Constants::MAX_FIRST_NAME_LENGTH }
