@@ -12,7 +12,10 @@ gem "sass-rails", ">= 6"
 gem "webpacker", "~> 5.0"
 
 # database
-gem "sqlite3", "~> 1.4"
+gem "sqlite3", "~> 1.4", group: [:development]
+
+# database in production
+gem "pg", group: [:production]
 
 # Adds react to rails
 gem "react-rails"
