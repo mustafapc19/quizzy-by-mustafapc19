@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 
-import { Button } from "@bigbinary/neetoui/v2";
-import { Header } from "@bigbinary/neetoui/v2/layouts";
+import { Button } from "bigbinary";
 import { either, isEmpty, isNil } from "ramda";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
 import authApi from "apis/auth";
 import { setAuthHeaders } from "apis/axios";
+import { Header } from "bigbinary/layouts";
 import { initializeLogger } from "common/logger";
 import Login from "components/Authentication/Login";
 import PrivateRoute from "components/Common/PrivateRoute";
