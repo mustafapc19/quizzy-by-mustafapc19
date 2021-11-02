@@ -1,20 +1,21 @@
 import React, { useEffect, useState } from "react";
 
-import { Button, Toastr } from "bigbinary";
+import { Toastr } from "neetoui";
 import { either, isEmpty, isNil } from "ramda";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 
 import authApi from "apis/auth";
 import { setAuthHeaders } from "apis/axios";
-import { Header } from "bigbinary/layouts";
 import { initializeLogger } from "common/logger";
 import Login from "components/Authentication/Login";
 import PrivateRoute from "components/Common/PrivateRoute";
 import Dashboard from "components/DashBoard";
+import NavBar from "components/NavBar";
 import {
   clearAuthFromLocalStorage,
   getFromLocalStorage,
+  getUserDataFromLocalStorage,
 } from "helpers/storage";
 
 const App = () => {
@@ -23,11 +24,15 @@ const App = () => {
     !either(isNil, isEmpty)(authToken) && authToken !== "null";
 
   const [loading, setLoading] = useState(true);
+  const [userData, setUserData] = useState({});
   const [isLoggedIn, setIsLoggedIn] = useState(initialIsLoggedIn);
 
   useEffect(() => {
     initializeLogger();
-    setAuthHeaders(setLoading);
+    setAuthHeaders(setLoading, setUserData);
+    if (isLoggedIn) {
+      setUserData(getUserDataFromLocalStorage());
+    }
   }, []);
 
   if (loading) {
@@ -48,20 +53,11 @@ const App = () => {
 
   return (
     <div className="mx-4">
-      <Header
-        actionBlock={
-          isLoggedIn ? (
-            <Button
-              style="text"
-              label="Logout"
-              onClick={() => handleLogout()}
-            />
-          ) : (
-            <></>
-          )
-        }
-        title="Quizzy"
-      ></Header>
+      <NavBar
+        userData={userData}
+        isLoggedIn={isLoggedIn}
+        handleLogout={handleLogout}
+      ></NavBar>
       <Router>
         <Switch>
           <Route exact path="/login" component={Login} />

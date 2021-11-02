@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import { Toastr } from "bigbinary";
+import { Toastr } from "neetoui";
 
 import authApi from "apis/auth";
 import { setAuthHeaders } from "apis/axios";

@@ -5,7 +5,7 @@ module.exports = {
       common: "src/common",
       components: "src/components",
       helpers: "src/helpers",
-      bigbinary: "@bigbinary/neetoui/v2"
+      neetoui: "@bigbinary/neetoui/v2"
     }
   }
 };

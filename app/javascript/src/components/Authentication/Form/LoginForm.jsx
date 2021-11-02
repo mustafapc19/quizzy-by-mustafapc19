@@ -1,12 +1,12 @@
 import React from "react";
 
-import { Button, Input } from "bigbinary";
+import { Button, Input } from "neetoui";
 import PropTypes from "prop-types";
 
 const LoginForm = ({ handleSubmit, setEmail, setPassword }) => {
   return (
     <div
-      className="flex items-center justify-center min-h-screen
+      className="flex items-center justify-center
       px-4 py-12 lg:px-8 bg-gray-50 sm:px-6"
     >
       <div className="w-full max-w-md">
@@ -37,9 +37,9 @@ const LoginForm = ({ handleSubmit, setEmail, setPassword }) => {
 };
 
 LoginForm.propTypes = {
-  handleSubmit: PropTypes.func,
-  setEmail: PropTypes.func,
-  setPassword: PropTypes.func,
+  handleSubmit: PropTypes.func.isRequired,
+  setEmail: PropTypes.func.isRequired,
+  setPassword: PropTypes.func.isRequired,
 };
 
 export default LoginForm;

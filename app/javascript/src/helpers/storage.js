@@ -20,6 +20,15 @@ const clearAuthFromLocalStorage = () => {
   localStorage.setItem("authUserLastName", JSON.stringify(null));
 };
 
+const getUserDataFromLocalStorage = () => {
+  return {
+    email: JSON.parse(localStorage.getItem("authEmail")),
+    userId: JSON.parse(localStorage.getItem("authUserId")),
+    firstName: JSON.parse(localStorage.getItem("authUserFirstName")),
+    lastName: JSON.parse(localStorage.getItem("authUserLastName")),
+  };
+};
+
 const getFromLocalStorage = key => {
   let storedValue = null;
   try {
@@ -31,4 +40,9 @@ const getFromLocalStorage = key => {
   return storedValue;
 };
 
-export { setToLocalStorage, getFromLocalStorage, clearAuthFromLocalStorage };
+export {
+  setToLocalStorage,
+  getFromLocalStorage,
+  clearAuthFromLocalStorage,
+  getUserDataFromLocalStorage,
+};
