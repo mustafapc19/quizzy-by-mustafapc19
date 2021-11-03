@@ -12,6 +12,14 @@ class QuizPolicy
     quiz.user_id == user.id
   end
 
+  def update?
+    quiz.user_id == user.id
+  end
+
+  def destroy?
+    quiz.user_id == user.id
+  end
+
   class Scope
     attr_reader :user, :scope
 
