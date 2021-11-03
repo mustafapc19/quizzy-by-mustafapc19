@@ -10,6 +10,7 @@ import { setAuthHeaders } from "apis/axios";
 import { initializeLogger } from "common/logger";
 import Login from "components/Authentication/Login";
 import PrivateRoute from "components/Common/PrivateRoute";
+import CreateQuiz from "components/CreateQuiz";
 import Dashboard from "components/DashBoard";
 import NavBar from "components/NavBar";
 import {
@@ -61,6 +62,12 @@ const App = () => {
       <Router>
         <Switch>
           <Route exact path="/login" component={Login} />
+          <PrivateRoute
+            path="/create_quiz"
+            redirectRoute="/login"
+            condition={isLoggedIn}
+            component={CreateQuiz}
+          />
           <PrivateRoute
             path="/"
             redirectRoute="/login"
