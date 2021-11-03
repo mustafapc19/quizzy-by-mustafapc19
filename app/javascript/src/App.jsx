@@ -13,6 +13,7 @@ import PrivateRoute from "components/Common/PrivateRoute";
 import CreateQuiz from "components/CreateQuiz";
 import Dashboard from "components/DashBoard";
 import NavBar from "components/NavBar";
+import ShowQuiz from "components/ShowQuiz";
 import { QuizzesProvider } from "contexts/quizzes";
 import {
   clearAuthFromLocalStorage,
@@ -65,9 +66,15 @@ const App = () => {
           <Switch>
             <Route exact path="/login" component={Login} />
             <PrivateRoute
+              path="/show_quiz"
+              redirectRoute="/login"
+              condition={!isLoggedIn}
+              component={ShowQuiz}
+            />
+            <PrivateRoute
               path="/create_quiz"
               redirectRoute="/login"
-              condition={isLoggedIn}
+              condition={!isLoggedIn}
               component={CreateQuiz}
             />
             <PrivateRoute
