@@ -1,8 +1,10 @@
 import React from "react";
 
 import { Form, Formik } from "formik";
-import { Button } from "neetoui";
+import { Button, Toastr } from "neetoui";
 import { Input } from "neetoui/formik";
+
+import quizzesApi from "apis/quizzes";
 
 import {
   CREATE_QUIZ_FORM_INITIAL_VALUE,
@@ -14,16 +16,20 @@ const CreateQuizForm = () => {
     <div>
       <Formik
         initialValues={CREATE_QUIZ_FORM_INITIAL_VALUE}
-        // validate={(values) =>
-        //   values.name.trim().length === 0 ? {} : { 'name': 'Name cannot be blank' }
-        // }
         validationSchema={CREATE_QUIZ_VALIDATION}
-        onSubmit={(values, { setSubmitting }) => {
-          setTimeout(() => {
-            // alert(JSON.stringify(values, null, 2));
+        onSubmit={async (values, { setSubmitting }) => {
+          try {
+            const res = await quizzesApi.create({
+              quiz: { name: values.name },
+            });
+            logger.info(res.data);
             setSubmitting(false);
-            // window.location.href = "/";
-          }, 400);
+            Toastr.success("Quiz created successfuly");
+            window.location.href = "/";
+          } catch (error) {
+            Toastr.error("Something went wrong");
+            logger.error(error);
+          }
         }}
       >
         {({ isSubmitting }) => (
