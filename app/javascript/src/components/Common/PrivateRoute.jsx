@@ -10,7 +10,7 @@ const PrivateRoute = ({
   redirectRoute,
   ...props
 }) => {
-  if (!condition) {
+  if (condition) {
     return (
       <Redirect
         to={{

@@ -13,6 +13,7 @@ import PrivateRoute from "components/Common/PrivateRoute";
 import CreateQuiz from "components/CreateQuiz";
 import Dashboard from "components/DashBoard";
 import NavBar from "components/NavBar";
+import { QuizzesProvider } from "contexts/quizzes";
 import {
   clearAuthFromLocalStorage,
   getFromLocalStorage,
@@ -53,31 +54,33 @@ const App = () => {
   };
 
   return (
-    <div className="mx-4">
-      <NavBar
-        userData={userData}
-        isLoggedIn={isLoggedIn}
-        handleLogout={handleLogout}
-      ></NavBar>
-      <Router>
-        <Switch>
-          <Route exact path="/login" component={Login} />
-          <PrivateRoute
-            path="/create_quiz"
-            redirectRoute="/login"
-            condition={isLoggedIn}
-            component={CreateQuiz}
-          />
-          <PrivateRoute
-            path="/"
-            redirectRoute="/login"
-            condition={isLoggedIn}
-            component={Dashboard}
-          />
-        </Switch>
-        <ToastContainer />
-      </Router>
-    </div>
+    <QuizzesProvider>
+      <div className="mx-4">
+        <NavBar
+          userData={userData}
+          isLoggedIn={isLoggedIn}
+          handleLogout={handleLogout}
+        ></NavBar>
+        <Router>
+          <Switch>
+            <Route exact path="/login" component={Login} />
+            <PrivateRoute
+              path="/create_quiz"
+              redirectRoute="/login"
+              condition={isLoggedIn}
+              component={CreateQuiz}
+            />
+            <PrivateRoute
+              path="/"
+              redirectRoute="/login"
+              condition={!isLoggedIn}
+              component={Dashboard}
+            />
+          </Switch>
+          <ToastContainer />
+        </Router>
+      </div>
+    </QuizzesProvider>
   );
 };
 
