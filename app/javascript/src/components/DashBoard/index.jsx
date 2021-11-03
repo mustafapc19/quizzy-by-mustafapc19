@@ -1,9 +1,24 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import { Button } from "neetoui";
 
+import quizzesApi from "apis/quizzes";
+import { useQuizzes } from "contexts/quizzes";
+
+import ShowQuizzes from "./ShowQuizzes";
+
 const DashBoard = () => {
-  const quizzes = [];
+  const [quizzes, setQuizzes] = useQuizzes();
+
+  useEffect(async () => {
+    try {
+      const res = await quizzesApi.list();
+      setQuizzes(res.data.quizzes);
+    } catch (error) {
+      logger.error(error);
+    }
+  }, []);
+
   return (
     <div className="space-y-2">
       <div className="flex flex-row justify-end">
@@ -18,7 +33,7 @@ const DashBoard = () => {
           You have not created any quiz
         </div>
       ) : (
-        <></>
+        <ShowQuizzes quizzes={quizzes}></ShowQuizzes>
       )}
     </div>
   );
