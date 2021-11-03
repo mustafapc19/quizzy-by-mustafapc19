@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 
 import { Button, Typography } from "neetoui";
+import { Link } from "react-router-dom";
 import { useTable } from "react-table";
 
 import ConfirmDelete from "./ConfirmDelete";
@@ -17,7 +18,16 @@ const ShowQuizzes = ({ quizzes }) => {
     () => [
       {
         accessor: "name",
-        Cell: ({ row }) => <div className="pt-1">{row.original.name}</div>,
+        Cell: ({ row }) => (
+          <Link
+            to={{
+              pathname: "show_quiz",
+              state: { quiz: row.original },
+            }}
+          >
+            {row.original.name}
+          </Link>
+        ),
       },
       {
         accessor: "edit",
