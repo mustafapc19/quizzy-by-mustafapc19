@@ -73,7 +73,7 @@ const App = () => {
             <PrivateRoute
               path="/"
               redirectRoute="/login"
-              condition={isLoggedIn}
+              condition={!isLoggedIn}
               component={Dashboard}
             />
           </Switch>
