@@ -8,24 +8,24 @@ const setToLocalStorage = ({
   localStorage.setItem("authToken", JSON.stringify(authToken));
   localStorage.setItem("authEmail", JSON.stringify(email));
   localStorage.setItem("authUserId", JSON.stringify(userId));
-  localStorage.setItem("authUserFirstName", JSON.stringify(userFirstName));
-  localStorage.setItem("authUserLastName", JSON.stringify(userLastName));
+  localStorage.setItem("firstName", JSON.stringify(userFirstName));
+  localStorage.setItem("lastName", JSON.stringify(userLastName));
 };
 
 const clearAuthFromLocalStorage = () => {
   localStorage.setItem("authToken", JSON.stringify(null));
   localStorage.setItem("authEmail", JSON.stringify(null));
   localStorage.setItem("authUserId", JSON.stringify(null));
-  localStorage.setItem("authUserFirstName", JSON.stringify(null));
-  localStorage.setItem("authUserLastName", JSON.stringify(null));
+  localStorage.setItem("firstName", JSON.stringify(null));
+  localStorage.setItem("lastName", JSON.stringify(null));
 };
 
 const getUserDataFromLocalStorage = () => {
   return {
     email: JSON.parse(localStorage.getItem("authEmail")),
     userId: JSON.parse(localStorage.getItem("authUserId")),
-    firstName: JSON.parse(localStorage.getItem("authUserFirstName")),
-    lastName: JSON.parse(localStorage.getItem("authUserLastName")),
+    firstName: JSON.parse(localStorage.getItem("firstName")),
+    lastName: JSON.parse(localStorage.getItem("lastName")),
   };
 };
 
