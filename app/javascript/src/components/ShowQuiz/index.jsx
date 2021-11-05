@@ -1,7 +1,7 @@
 import React from "react";
 
 import { Button, Typography } from "neetoui";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 const ShowQuiz = () => {
   const { quiz } = useLocation().state;
@@ -15,7 +15,19 @@ const ShowQuiz = () => {
           style="h2"
           weight="medium"
         >{`${quiz.name} quiz`}</Typography>
-        <Button className="flex" label="Add questions" />
+        <Button
+          className="flex"
+          label={
+            <Link
+              to={{
+                pathname: "create_question",
+                state: { quiz: quiz },
+              }}
+            >
+              Add questions
+            </Link>
+          }
+        />
       </div>
       {questions.length === 0 ? (
         <div className="flex flex-row justify-center">
