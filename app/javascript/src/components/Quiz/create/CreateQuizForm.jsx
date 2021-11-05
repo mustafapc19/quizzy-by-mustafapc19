@@ -19,10 +19,10 @@ const CreateQuizForm = () => {
         validationSchema={CREATE_QUIZ_VALIDATION}
         onSubmit={async (values, { setSubmitting }) => {
           try {
-            const res = await quizzesApi.create({
+            const response = await quizzesApi.create({
               quiz: { name: values.name },
             });
-            logger.info(res.data);
+            logger.info(response.data);
             setSubmitting(false);
             Toastr.success("Quiz created successfuly");
             window.location.href = "/";

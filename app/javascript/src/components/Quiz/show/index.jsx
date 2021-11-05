@@ -5,15 +5,15 @@ import { Button } from "neetoui";
 import quizzesApi from "apis/quizzes";
 import { useQuizzes } from "contexts/quizzes";
 
-import ShowQuizzes from "./ShowQuizzes";
+import ListQuizzes from "./ListQuizzes";
 
-const DashBoard = () => {
+const ShowQuiz = () => {
   const [quizzes, setQuizzes] = useQuizzes();
 
   useEffect(async () => {
     try {
-      const res = await quizzesApi.list();
-      setQuizzes(res.data.quizzes);
+      const response = await quizzesApi.list();
+      setQuizzes(response.data.quizzes);
     } catch (error) {
       logger.error(error);
     }
@@ -33,10 +33,10 @@ const DashBoard = () => {
           You have not created any quiz
         </div>
       ) : (
-        <ShowQuizzes quizzes={quizzes}></ShowQuizzes>
+        <ListQuizzes quizzes={quizzes}></ListQuizzes>
       )}
     </div>
   );
 };
 
-export default DashBoard;
+export default ShowQuiz;
