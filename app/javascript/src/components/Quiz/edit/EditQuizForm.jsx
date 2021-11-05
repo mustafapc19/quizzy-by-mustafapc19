@@ -20,10 +20,10 @@ const EditQuizForm = ({ quiz, setShowEditQuizModal }) => {
         validationSchema={EDIT_QUIZ_VALIDATION}
         onSubmit={async (values, { setSubmitting }) => {
           try {
-            const res = await quizzesApi.update(quiz.id, {
+            const response = await quizzesApi.update(quiz.id, {
               quiz: { name: values.name },
             });
-            logger.info(res.data);
+            logger.info(response.data);
 
             setQuizzes(old => [
               ...old.map(item => {

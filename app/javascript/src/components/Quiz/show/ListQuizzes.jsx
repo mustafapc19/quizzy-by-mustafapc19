@@ -5,9 +5,10 @@ import { Link } from "react-router-dom";
 import { useTable } from "react-table";
 
 import ConfirmDelete from "./ConfirmDelete";
-import EditQuiz from "./EditQuestion";
 
-const ShowQuizzes = ({ quizzes }) => {
+import EditQuiz from "../edit";
+
+const ListQuizzes = ({ quizzes }) => {
   const [showEditQuizModal, setShowEditQuizModal] = useState(false);
   const [showConfirmDeleteModal, setShowConfirmDeleteModal] = useState(false);
   const [onFocusQuiz, setOnFocusQuiz] = useState({});
@@ -111,4 +112,4 @@ const ShowQuizzes = ({ quizzes }) => {
   );
 };
 
-export default ShowQuizzes;
+export default ListQuizzes;

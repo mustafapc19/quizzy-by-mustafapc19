@@ -10,10 +10,11 @@ import { setAuthHeaders } from "apis/axios";
 import { initializeLogger } from "common/logger";
 import Login from "components/Authentication/Login";
 import PrivateRoute from "components/Common/PrivateRoute";
-import CreateQuiz from "components/CreateQuiz";
-import Dashboard from "components/DashBoard";
 import NavBar from "components/NavBar";
-import ShowQuiz from "components/ShowQuiz";
+import CreateQuestion from "components/Questions/create";
+import ShowQuestion from "components/Questions/show";
+import CreateQuiz from "components/Quiz/create";
+import ShowQuiz from "components/Quiz/show";
 import { QuizzesProvider } from "contexts/quizzes";
 import {
   clearAuthFromLocalStorage,
@@ -69,7 +70,7 @@ const App = () => {
               path="/show_quiz"
               redirectRoute="/login"
               condition={!isLoggedIn}
-              component={ShowQuiz}
+              component={ShowQuestion}
             />
             <PrivateRoute
               path="/create_quiz"
@@ -78,10 +79,16 @@ const App = () => {
               component={CreateQuiz}
             />
             <PrivateRoute
+              path="/create_question"
+              redirectRoute="/login"
+              condition={!isLoggedIn}
+              component={CreateQuestion}
+            />
+            <PrivateRoute
               path="/"
               redirectRoute="/login"
               condition={!isLoggedIn}
-              component={Dashboard}
+              component={ShowQuiz}
             />
           </Switch>
           <ToastContainer />
