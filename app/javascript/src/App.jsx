@@ -12,6 +12,7 @@ import Login from "components/Authentication/Login";
 import PrivateRoute from "components/Common/PrivateRoute";
 import NavBar from "components/NavBar";
 import CreateQuestion from "components/Questions/create";
+import ShowQuestion from "components/Questions/show";
 import CreateQuiz from "components/Quiz/create";
 import ShowQuiz from "components/Quiz/show";
 import { QuizzesProvider } from "contexts/quizzes";
@@ -69,7 +70,7 @@ const App = () => {
               path="/show_quiz"
               redirectRoute="/login"
               condition={!isLoggedIn}
-              component={ShowQuiz}
+              component={ShowQuestion}
             />
             <PrivateRoute
               path="/create_quiz"

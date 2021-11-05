@@ -3,7 +3,7 @@ import React from "react";
 import { Button, Typography } from "neetoui";
 import { Link, useLocation } from "react-router-dom";
 
-const ShowQuiz = () => {
+const ShowQuestion = () => {
   const { quiz } = useLocation().state;
   const questions = [];
 
@@ -42,4 +42,4 @@ const ShowQuiz = () => {
   );
 };
 
-export default ShowQuiz;
+export default ShowQuestion;

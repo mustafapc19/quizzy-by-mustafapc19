@@ -36,7 +36,7 @@ const CreateQuestion = () => {
         onSubmit={async (values, { setSubmitting }) => {
           try {
             await questionsApi.create({
-              quizzes_id: quiz.id,
+              quiz_id: quiz.id,
               payload: {
                 question: {
                   name: values.name,
@@ -74,33 +74,44 @@ const CreateQuestion = () => {
                     name={`option-${index}`}
                     label={`Option ${index + 1}`}
                   />
-                  <Button
-                    type="button"
-                    style="text"
-                    label="remove"
-                    onClick={() => {
-                      setOptions(
-                        options.filter(
-                          (_, oldOptionIndex) => oldOptionIndex !== index
-                        )
-                      );
-                    }}
-                  />
+                  {index >= 2 ? (
+                    <Button
+                      type="button"
+                      style="text"
+                      label="remove"
+                      onClick={() => {
+                        setOptions(
+                          options.filter(
+                            (_, oldOptionIndex) => oldOptionIndex !== index
+                          )
+                        );
+                      }}
+                    />
+                  ) : (
+                    <></>
+                  )}
                 </div>
               );
             })}
-            <Button
-              type="button"
-              style="text"
-              label="Add option"
-              onClick={() => setOptions(old => [...old, ""])}
-            />
-            <Dropdown buttonStyle="text" label={`Option ${correctOptionIndex}`}>
+            {options.length < 4 ? (
+              <Button
+                type="button"
+                style="text"
+                label="Add option"
+                onClick={() => setOptions(old => [...old, ""])}
+              />
+            ) : (
+              <></>
+            )}
+            <Dropdown
+              buttonStyle="text"
+              label={`Option ${correctOptionIndex + 1}`}
+            >
               {options.map((_, index) => (
                 <li
                   key={index}
                   onClick={() => setCorrectOptionIndex(index)}
-                >{`Option ${index}`}</li>
+                >{`Option ${index + 1}`}</li>
               ))}
             </Dropdown>
             <Button type="submit" label="Submit" disabled={isSubmitting} />
