@@ -80,6 +80,9 @@ const CreateQuestion = () => {
                       style="text"
                       label="remove"
                       onClick={() => {
+                        if (index == options.length - 1) {
+                          setCorrectOptionIndex(index - 1);
+                        }
                         setOptions(
                           options.filter(
                             (_, oldOptionIndex) => oldOptionIndex !== index
