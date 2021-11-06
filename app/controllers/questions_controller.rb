@@ -1,9 +1,17 @@
 # frozen_string_literal: true
 
 class QuestionsController < ApplicationController
-  after_action :verify_authorized, except: :index
+  after_action :verify_authorized
   before_action :authenticate_user_using_x_auth_token
   before_action :load_quiz
+
+  def index
+    authorize @quiz
+    @questions = @quiz.quiz_question.map do |question|
+      { "question" => question, "options" => question.quiz_option }
+    end
+    render status: :ok, json: @questions.to_json
+  end
 
   def create
     authorize @quiz
