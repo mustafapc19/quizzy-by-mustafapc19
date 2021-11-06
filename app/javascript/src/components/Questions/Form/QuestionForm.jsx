@@ -92,7 +92,9 @@ const QuestionForm = ({ quiz, question }) => {
             history.goBack();
             // window.location.href = "/";
           } catch (error) {
-            Toastr.error(error.response.data.error);
+            Toastr.error(
+              error?.response?.data?.error || "Something went wrong"
+            );
             logger.error(error.response.data.error);
           }
         }}

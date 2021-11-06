@@ -27,7 +27,9 @@ const CreateQuizForm = () => {
             Toastr.success("Quiz created successfuly");
             window.location.href = "/";
           } catch (error) {
-            Toastr.error("Something went wrong");
+            Toastr.error(
+              error?.response?.data?.error || "Something went wrong"
+            );
             logger.error(error);
           }
         }}

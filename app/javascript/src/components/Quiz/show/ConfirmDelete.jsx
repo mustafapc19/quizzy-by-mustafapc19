@@ -36,7 +36,9 @@ const ConfirmDelete = ({
               setShowConfirmDeleteModal(false);
             } catch (error) {
               logger.error(error);
-              Toastr.error("Something went wrong");
+              Toastr.error(
+                error?.response?.data?.error || "Something went wrong"
+              );
             }
           }}
         />

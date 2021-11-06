@@ -29,7 +29,7 @@ const Login = () => {
       window.location.href = "/";
     } catch (error) {
       logger.error(error);
-      Toastr.error(Error("Login failed!"));
+      Toastr.error(error?.response?.data?.error || "Something went wrong");
       setLoading(false);
     }
   };

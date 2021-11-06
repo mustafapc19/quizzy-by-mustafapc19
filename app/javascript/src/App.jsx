@@ -51,7 +51,7 @@ const App = () => {
       window.location.href = "/";
       setIsLoggedIn(false);
     } catch (error) {
-      Toastr.error(Error("Some error occured!"));
+      Toastr.error(error?.response?.data?.error || "Something went wrong");
       logger.error(error);
     }
   };

@@ -39,7 +39,9 @@ const EditQuizForm = ({ quiz, setShowEditQuizModal }) => {
             Toastr.success("Quiz updated successfuly");
             setShowEditQuizModal(false);
           } catch (error) {
-            Toastr.error("Something went wrong");
+            Toastr.error(
+              error?.response?.data?.error || "Something went wrong"
+            );
             logger.error(error);
           }
         }}
