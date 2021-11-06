@@ -18,7 +18,7 @@ class QuestionsController < ApplicationController
     question = @quiz.quiz_question.new(name: question_params[:name])
 
     question_params[:options].each do |option|
-      question.quiz_option.new(question_params[:options])
+      question.quiz_option.new(option)
     end
 
     if question.save
@@ -30,10 +30,28 @@ class QuestionsController < ApplicationController
     end
   end
 
+  def update
+    authorize @quiz
+    question = @quiz.quiz_question.find_by(id: params[:id])
+    question.name = question_params[:name]
+
+    question_params[:options].each do |option|
+      question.quiz_option.update_or_create_by({ id: option[:id] }, option)
+    end
+
+    if question.save
+      render status: :ok,
+        json: { notice: t("successfully_updated", entity: "Question") }
+    else
+      errors = question.errors.full_messages.to_sentence
+      render status: :unprocessable_entity, json: { error: errors }
+    end
+  end
+
   private
 
     def question_params
-      params.require(:question).permit(:name, options: [[:name, :correct]])
+      params.require(:question).permit(:name, options: [[:name, :correct, :id]])
     end
 
     def load_quiz
