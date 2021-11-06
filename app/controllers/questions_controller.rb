@@ -48,6 +48,17 @@ class QuestionsController < ApplicationController
     end
   end
 
+  def destroy
+    authorize @quiz
+    question = @quiz.quiz_question.find_by(id: params[:id])
+    if question.destroy
+      render status: :ok, json: {}
+    else
+      render status: :unprocessable_entity,
+        json: { error: question.errors.full_messages.to_sentence }
+    end
+end
+
   private
 
     def question_params

@@ -5,9 +5,13 @@ import { Link, useLocation } from "react-router-dom";
 
 import questionsApi from "apis/questions";
 
+import ConfirmDelete from "./ConfirmDelete";
+
 const ShowQuestions = () => {
   const { quiz } = useLocation().state;
   const [questions, setQuestions] = useState({});
+  const [showConfirmDeleteModal, setShowConfirmDeleteModal] = useState(false);
+  const [onFocusQuestion, setOnFocusQuestion] = useState({});
 
   useEffect(async () => {
     const response = await questionsApi.list({ quiz_id: quiz.id });
@@ -74,7 +78,14 @@ const ShowQuestions = () => {
                   </Link>
                 }
               />
-              <Button style="danger" label="Delete"></Button>
+              <Button
+                style="danger"
+                label="Delete"
+                onClick={() => {
+                  setOnFocusQuestion(questions[key]);
+                  setShowConfirmDeleteModal(true);
+                }}
+              ></Button>
             </div>
             <div className="flex flex-col  pt-2">
               {questions[key].options.map((option, index) => (
@@ -92,6 +103,13 @@ const ShowQuestions = () => {
           </div>
         ))
       )}
+      <ConfirmDelete
+        quiz={quiz}
+        question={onFocusQuestion}
+        showConfirmDeleteModal={showConfirmDeleteModal}
+        setQuestions={setQuestions}
+        setShowConfirmDeleteModal={setShowConfirmDeleteModal}
+      />
     </>
   );
 };
