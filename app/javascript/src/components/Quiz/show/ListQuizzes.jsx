@@ -13,7 +13,7 @@ const ListQuizzes = ({ quizzes }) => {
   const [showConfirmDeleteModal, setShowConfirmDeleteModal] = useState(false);
   const [onFocusQuiz, setOnFocusQuiz] = useState({});
 
-  const data = React.useMemo(() => quizzes, [quizzes]);
+  const data = React.useMemo(() => Object.keys(quizzes), [quizzes]);
 
   const columns = React.useMemo(
     () => [
@@ -23,10 +23,10 @@ const ListQuizzes = ({ quizzes }) => {
           <Link
             to={{
               pathname: "show_quiz",
-              state: { quiz: row.original },
+              state: { quiz: quizzes[row.original] },
             }}
           >
-            {row.original.name}
+            {quizzes[row.original].name}
           </Link>
         ),
       },
@@ -37,7 +37,7 @@ const ListQuizzes = ({ quizzes }) => {
             label="edit"
             style="secondary"
             onClick={() => {
-              setOnFocusQuiz(row.original);
+              setOnFocusQuiz(quizzes[row.original]);
               setShowEditQuizModal(true);
             }}
           />
@@ -50,7 +50,7 @@ const ListQuizzes = ({ quizzes }) => {
             label="delete"
             style="danger"
             onClick={() => {
-              setOnFocusQuiz(row.original);
+              setOnFocusQuiz(quizzes[row.original]);
               setShowConfirmDeleteModal(true);
             }}
           />

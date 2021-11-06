@@ -13,7 +13,9 @@ const ShowQuiz = () => {
   useEffect(async () => {
     try {
       const response = await quizzesApi.list();
-      setQuizzes(response.data.quizzes);
+      let quizzes = {};
+      response.data.quizzes.forEach(quiz => (quizzes[quiz.id] = quiz));
+      setQuizzes(quizzes);
     } catch (error) {
       logger.error(error);
     }
@@ -28,7 +30,7 @@ const ShowQuiz = () => {
           onClick={() => (window.location.href = "/create_quiz")}
         ></Button>
       </div>
-      {quizzes.length === 0 ? (
+      {Object.keys(quizzes).length === 0 ? (
         <div className="flex items-center justify-center pt-16">
           You have not created any quiz
         </div>

@@ -6,7 +6,7 @@ const QuizzesStateContext = React.createContext();
 const QuizzesSetStateContext = React.createContext();
 
 const QuizzesProvider = ({ children }) => {
-  const [state, setState] = React.useState([]);
+  const [state, setState] = React.useState({});
   return (
     <QuizzesStateContext.Provider value={state}>
       <QuizzesSetStateContext.Provider value={setState}>
