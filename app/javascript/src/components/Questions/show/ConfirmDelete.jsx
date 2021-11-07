@@ -3,7 +3,7 @@ import React from "react";
 import { Button, Modal, Toastr, Typography } from "neetoui";
 import PropTypes from "prop-types";
 
-import questionsApi from "../../../apis/questions";
+import questionsApi from "apis/questions";
 
 const ConfirmDelete = ({
   quiz,
