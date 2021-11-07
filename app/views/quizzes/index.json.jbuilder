@@ -3,5 +3,6 @@
 json.quizzes @quizzes do |quiz|
   json.extract! quiz,
     :id,
-    :name
+    :name,
+    :slug
 end
