@@ -31,4 +31,13 @@ class QuizTest < ActiveSupport::TestCase
     assert_not @quiz.valid?
     assert_equal ["User must exist"], @quiz.errors.full_messages
   end
+
+  def test_slug_should_be_unique
+    quiz_with_same_title = Quiz.new(name: "test", user_id: @user.id)
+    @quiz.slug = "test"
+    @quiz.save
+
+    quiz_with_same_title.slug = "test"
+    assert_not quiz_with_same_title.save
+  end
 end
