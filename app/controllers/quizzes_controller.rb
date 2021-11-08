@@ -24,9 +24,12 @@ class QuizzesController < ApplicationController
 
   def update
     authorize @quiz
-    if @quiz.update(quiz_params)
-      render status: :ok, json: {}
-    else
+
+    if quiz_params[:publish]
+      @quiz.set_slug
+    end
+
+    unless quiz_params[:publish] ? @quiz.save : @quiz.update(quiz_params)
       render status: :unprocessable_entity,
         json: { error: @quiz.errors.full_messages.to_sentence }
     end
@@ -45,7 +48,7 @@ class QuizzesController < ApplicationController
   private
 
     def quiz_params
-      params.require(:quiz).permit(:name, :id)
+      params.require(:quiz).permit(:name, :id, :publish)
     end
 
     def load_quiz

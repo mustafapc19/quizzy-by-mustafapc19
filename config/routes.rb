@@ -7,6 +7,12 @@ Rails.application.routes.draw do
       resources :questions
     end
   end
+
+  get "/public/:slug", to: "attempts#index"
+  namespace :public do
+    resources :attempts
+  end
+
   root "home#index"
-  get "*path", to: "home#index", via: :all
+  # get "*path", to: "home#index", via: :all
 end

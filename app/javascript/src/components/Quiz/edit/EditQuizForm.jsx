@@ -25,15 +25,10 @@ const EditQuizForm = ({ quiz, setShowEditQuizModal }) => {
             });
             logger.info(response.data);
 
-            setQuizzes(old => [
-              ...old.map(item => {
-                if (item.id === quiz.id) {
-                  item.name = values.name;
-                }
-
-                return item;
-              }),
-            ]);
+            setQuizzes(old => {
+              old[quiz.id].name = values.name;
+              return { ...old };
+            });
 
             setSubmitting(false);
             Toastr.success("Quiz updated successfuly");

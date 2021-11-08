@@ -4,11 +4,12 @@ import { Button, Typography } from "neetoui";
 import { Link, useLocation } from "react-router-dom";
 
 import questionsApi from "apis/questions";
+import quizzesApi from "apis/quizzes";
 
 import ConfirmDelete from "./ConfirmDelete";
 
 const ShowQuestions = () => {
-  const { quiz } = useLocation().state;
+  const [quiz, setQuiz] = useState(useLocation().state.quiz);
   const [questions, setQuestions] = useState({});
   const [showConfirmDeleteModal, setShowConfirmDeleteModal] = useState(false);
   const [onFocusQuestion, setOnFocusQuestion] = useState({});
@@ -45,13 +46,39 @@ const ShowQuestions = () => {
               </Link>
             }
           />
-          {Object.keys(questions).length !== 0 ? (
-            <Button className="flex" label="Publish" />
+          {Object.keys(questions).length !== 0 && !(quiz.slug?.length > 0) ? (
+            <Button
+              className="flex"
+              label="Publish"
+              onClick={async () => {
+                const response = await quizzesApi.update(quiz.id, {
+                  quiz: {
+                    publish: true,
+                  },
+                });
+                logger.info(response.data);
+                quiz.slug = response.data.slug;
+                setQuiz({ ...quiz });
+              }}
+            />
           ) : (
             <></>
           )}
         </div>
       </div>
+      {quiz.slug?.length > 0 ? (
+        <div>
+          Published your public link is{" "}
+          <a
+            className="text-blue-700"
+            href={`http://localhost:3000/public/${quiz.slug}`}
+          >
+            {`http://localhost:3000/public/${quiz.slug}`}
+          </a>
+        </div>
+      ) : (
+        <></>
+      )}
       {Object.keys(questions).length === 0 ? (
         <div className="flex flex-row justify-center">
           <Typography className="mt-20">
