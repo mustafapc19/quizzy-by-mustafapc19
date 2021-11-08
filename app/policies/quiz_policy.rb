@@ -8,6 +8,10 @@ class QuizPolicy
     @quiz = quiz
   end
 
+  def index?
+    quiz.user_id == user.id
+  end
+
   def create?
     quiz.user_id == user.id
   end

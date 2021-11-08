@@ -3,16 +3,15 @@ import React from "react";
 import { Button, Modal, Toastr, Typography } from "neetoui";
 import PropTypes from "prop-types";
 
-import quizzesApi from "apis/quizzes";
-import { useQuizzes } from "contexts/quizzes";
+import questionsApi from "apis/questions";
 
 const ConfirmDelete = ({
   quiz,
+  question,
   showConfirmDeleteModal,
   setShowConfirmDeleteModal,
+  setQuestions,
 }) => {
-  const setQuizzes = useQuizzes()[1];
-
   return (
     <div className="w-full">
       <Modal
@@ -29,13 +28,19 @@ const ConfirmDelete = ({
           style="danger"
           onClick={async () => {
             try {
-              await quizzesApi.destroy(quiz.id);
-              setQuizzes(old => [...old.filter(item => item.id !== quiz.id)]);
+              await questionsApi.destroy({
+                question_id: question.id,
+                quiz_id: quiz.id,
+              });
 
-              Toastr.success("Quiz deleted successfuly");
+              Toastr.success("Question deleted successfuly");
+              setQuestions(old => {
+                delete old[question.id];
+                return { ...old };
+              });
               setShowConfirmDeleteModal(false);
             } catch (error) {
-              logger.error(error);
+              logger.error(error?.response?.data?.error);
               Toastr.error(
                 error?.response?.data?.error || "Something went wrong"
               );
@@ -55,6 +60,8 @@ const ConfirmDelete = ({
 ConfirmDelete.propTypes = {
   showConfirmDeleteModal: PropTypes.bool.isRequired,
   setShowConfirmDeleteModal: PropTypes.func.isRequired,
+  setQuestions: PropTypes.func.isRequired,
+  question: PropTypes.object.isRequired,
   quiz: PropTypes.object.isRequired,
 };
 

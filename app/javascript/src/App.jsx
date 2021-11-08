@@ -12,7 +12,8 @@ import Login from "components/Authentication/Login";
 import PrivateRoute from "components/Common/PrivateRoute";
 import NavBar from "components/NavBar";
 import CreateQuestion from "components/Questions/create";
-import ShowQuestion from "components/Questions/show";
+import EditQuestion from "components/Questions/edit";
+import ShowQuestions from "components/Questions/show";
 import CreateQuiz from "components/Quiz/create";
 import ShowQuiz from "components/Quiz/show";
 import { QuizzesProvider } from "contexts/quizzes";
@@ -50,7 +51,7 @@ const App = () => {
       window.location.href = "/";
       setIsLoggedIn(false);
     } catch (error) {
-      Toastr.error(Error("Some error occured!"));
+      Toastr.error(error?.response?.data?.error || "Something went wrong");
       logger.error(error);
     }
   };
@@ -70,13 +71,19 @@ const App = () => {
               path="/show_quiz"
               redirectRoute="/login"
               condition={!isLoggedIn}
-              component={ShowQuestion}
+              component={ShowQuestions}
             />
             <PrivateRoute
               path="/create_quiz"
               redirectRoute="/login"
               condition={!isLoggedIn}
               component={CreateQuiz}
+            />
+            <PrivateRoute
+              path="/edit_question"
+              redirectRoute="/login"
+              condition={!isLoggedIn}
+              component={EditQuestion}
             />
             <PrivateRoute
               path="/create_question"
