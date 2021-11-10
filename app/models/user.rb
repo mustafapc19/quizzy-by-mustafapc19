@@ -6,6 +6,9 @@ class User < ApplicationRecord
   enum role: { standard: "standard", administrator: "administrator" }, _default: :standard
 
   has_many :quizzes
+  has_many :attempts
+
+  accepts_nested_attributes_for :attempts
 
   has_secure_password
   has_secure_token :authentication_token
