@@ -7,7 +7,7 @@ class QuestionsController < ApplicationController
 
   def index
     authorize @quiz
-    @questions = @quiz.quiz_question.map do |question|
+    @questions = @quiz.quiz_questions.map do |question|
       { "question" => question, "options" => question.quiz_option }
     end
     render status: :ok, json: @questions.to_json
@@ -15,7 +15,7 @@ class QuestionsController < ApplicationController
 
   def create
     authorize @quiz
-    question = @quiz.quiz_question.new(name: question_params[:name])
+    question = @quiz.quiz_questions.new(name: question_params[:name])
 
     question_params[:options].each do |option|
       question.quiz_option.new(option)
@@ -32,7 +32,7 @@ class QuestionsController < ApplicationController
 
   def update
     authorize @quiz
-    question = @quiz.quiz_question.find_by(id: params[:id])
+    question = @quiz.quiz_questions.find_by(id: params[:id])
     question.name = question_params[:name]
 
     question_params[:options].each do |option|
@@ -50,7 +50,7 @@ class QuestionsController < ApplicationController
 
   def destroy
     authorize @quiz
-    question = @quiz.quiz_question.find_by(id: params[:id])
+    question = @quiz.quiz_questions.find_by(id: params[:id])
     if question.destroy
       render status: :ok, json: {}
     else
