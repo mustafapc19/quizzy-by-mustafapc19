@@ -8,3 +8,6 @@ en:
   successfully_updated: "%{entity} was updated created!"
   quiz:
     not_found: "Quiz not found"
+  attempt:
+    not_found: "Attempt not found"
+    already_submitted: "Attempt already submitted"

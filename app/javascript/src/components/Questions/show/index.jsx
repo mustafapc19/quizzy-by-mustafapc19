@@ -71,9 +71,9 @@ const ShowQuestions = () => {
           Published your public link is{" "}
           <a
             className="text-blue-700"
-            href={`http://localhost:3000/public/${quiz.slug}`}
+            href={`${window.location.origin}/public/${quiz.slug}`}
           >
-            {`http://localhost:3000/public/${quiz.slug}`}
+            {`${window.location.origin}/public/${quiz.slug}`}
           </a>
         </div>
       ) : (

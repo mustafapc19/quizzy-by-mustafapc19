@@ -4,12 +4,23 @@ const setToLocalStorage = ({
   userId,
   userFirstName,
   userLastName,
+  attemptId = null,
 }) => {
-  localStorage.setItem("authToken", JSON.stringify(authToken));
-  localStorage.setItem("authEmail", JSON.stringify(email));
-  localStorage.setItem("authUserId", JSON.stringify(userId));
-  localStorage.setItem("firstName", JSON.stringify(userFirstName));
-  localStorage.setItem("lastName", JSON.stringify(userLastName));
+  if (authToken) localStorage.setItem("authToken", JSON.stringify(authToken));
+
+  if (email) localStorage.setItem("authEmail", JSON.stringify(email));
+
+  if (userId) localStorage.setItem("authUserId", JSON.stringify(userId));
+
+  if (userFirstName) {
+    localStorage.setItem("firstName", JSON.stringify(userFirstName));
+  }
+
+  if (userLastName) {
+    localStorage.setItem("lastName", JSON.stringify(userLastName));
+  }
+
+  if (attemptId) localStorage.setItem("attemptId", JSON.stringify(attemptId));
 };
 
 const clearAuthFromLocalStorage = () => {
@@ -18,14 +29,16 @@ const clearAuthFromLocalStorage = () => {
   localStorage.setItem("authUserId", JSON.stringify(null));
   localStorage.setItem("firstName", JSON.stringify(null));
   localStorage.setItem("lastName", JSON.stringify(null));
+  localStorage.setItem("attemptId", JSON.stringify(null));
 };
 
 const getUserDataFromLocalStorage = () => {
   return {
-    email: JSON.parse(localStorage.getItem("authEmail")),
-    userId: JSON.parse(localStorage.getItem("authUserId")),
-    firstName: JSON.parse(localStorage.getItem("firstName")),
-    lastName: JSON.parse(localStorage.getItem("lastName")),
+    email: getFromLocalStorage("authEmail"),
+    userId: getFromLocalStorage("authUserId"),
+    firstName: getFromLocalStorage("firstName"),
+    lastName: getFromLocalStorage("lastName"),
+    attemptId: getFromLocalStorage("attemptId"),
   };
 };
 
