@@ -8,7 +8,7 @@ class QuestionsController < ApplicationController
   def index
     authorize @quiz
     @questions = @quiz.quiz_questions.map do |question|
-      { "question" => question, "options" => question.quiz_option }
+      { "question" => question, "options" => question.quiz_options }
     end
     render status: :ok, json: @questions.to_json
   end
@@ -18,7 +18,7 @@ class QuestionsController < ApplicationController
     question = @quiz.quiz_questions.new(name: question_params[:name])
 
     question_params[:options].each do |option|
-      question.quiz_option.new(option)
+      question.quiz_options.new(option)
     end
 
     if question.save
@@ -36,7 +36,7 @@ class QuestionsController < ApplicationController
     question.name = question_params[:name]
 
     question_params[:options].each do |option|
-      question.quiz_option.update_or_create_by({ id: option[:id] }, option)
+      question.quiz_options.update_or_create_by({ id: option[:id] }, option)
     end
 
     if question.save
