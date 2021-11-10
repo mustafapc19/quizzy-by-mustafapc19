@@ -58,49 +58,51 @@ const App = () => {
 
   return (
     <QuizzesProvider>
-      <div className="mx-4">
+      <>
         <NavBar
           userData={userData}
           isLoggedIn={isLoggedIn}
           handleLogout={handleLogout}
         ></NavBar>
-        <Router>
-          <Switch>
-            <Route exact path="/login" component={Login} />
-            <PrivateRoute
-              path="/show_quiz"
-              redirectRoute="/login"
-              condition={!isLoggedIn}
-              component={ShowQuestions}
-            />
-            <PrivateRoute
-              path="/create_quiz"
-              redirectRoute="/login"
-              condition={!isLoggedIn}
-              component={CreateQuiz}
-            />
-            <PrivateRoute
-              path="/edit_question"
-              redirectRoute="/login"
-              condition={!isLoggedIn}
-              component={EditQuestion}
-            />
-            <PrivateRoute
-              path="/create_question"
-              redirectRoute="/login"
-              condition={!isLoggedIn}
-              component={CreateQuestion}
-            />
-            <PrivateRoute
-              path="/"
-              redirectRoute="/login"
-              condition={!isLoggedIn}
-              component={ShowQuiz}
-            />
-          </Switch>
-          <ToastContainer />
-        </Router>
-      </div>
+        <div className="mx-8 mt-6">
+          <Router>
+            <Switch>
+              <Route exact path="/login" component={Login} />
+              <PrivateRoute
+                path="/show_quiz"
+                redirectRoute="/login"
+                condition={!isLoggedIn}
+                component={ShowQuestions}
+              />
+              <PrivateRoute
+                path="/create_quiz"
+                redirectRoute="/login"
+                condition={!isLoggedIn}
+                component={CreateQuiz}
+              />
+              <PrivateRoute
+                path="/edit_question"
+                redirectRoute="/login"
+                condition={!isLoggedIn}
+                component={EditQuestion}
+              />
+              <PrivateRoute
+                path="/create_question"
+                redirectRoute="/login"
+                condition={!isLoggedIn}
+                component={CreateQuestion}
+              />
+              <PrivateRoute
+                path="/"
+                redirectRoute="/login"
+                condition={!isLoggedIn}
+                component={ShowQuiz}
+              />
+            </Switch>
+            <ToastContainer />
+          </Router>
+        </div>
+      </>
     </QuizzesProvider>
   );
 };

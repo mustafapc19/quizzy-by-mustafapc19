@@ -63,7 +63,7 @@ const Registration = () => {
     <>
       <div className="flex flex-row justify-between">
         <Typography
-          className="flex"
+          className="flex ml-10 mt-12 text-gray-600"
           style="h2"
           weight="medium"
         >{`Welcome to ${attempts.quiz.name} quiz`}</Typography>
