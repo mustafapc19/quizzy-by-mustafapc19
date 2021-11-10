@@ -1,30 +1,63 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
-import Logger from "js-logger";
 import { Typography } from "neetoui";
 import PropTypes from "prop-types";
+import { either, isEmpty, isNil } from "ramda";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
+import { setAuthHeaders } from "apis/axios";
 import { initializeLogger } from "common/logger";
+import PrivateRoute from "components/Common/PrivateRoute";
 
+import { urlRoot } from "./constants";
+import Registration from "./Registration";
+import ShowAttempt from "./show";
+
+import { AttemptsProvider } from "../../contexts/attempts";
+import { getFromLocalStorage } from "../../helpers/storage";
 import NavBar from "../NavBar";
 
 const Attempt = ({ quiz, questions }) => {
+  const [loading, setLoading] = useState(true);
+
+  const isLoggedIn = () => {
+    const authToken = getFromLocalStorage("authToken");
+    return !either(isNil, isEmpty)(authToken) && authToken !== "null";
+  };
+
   useEffect(() => {
     initializeLogger();
-    Logger.info(quiz, questions);
+    setAuthHeaders(setLoading);
+
+    logger.info(quiz, questions);
   }, []);
 
   return (
-    <div>
+    <AttemptsProvider
+      quiz={quiz}
+      questions={questions}
+      attemptId={getFromLocalStorage("attemptId")}
+    >
       <NavBar userData={{}}></NavBar>
       {quiz ? (
-        <div className="flex flex-row justify-between">
-          <Typography
-            className="flex"
-            style="h2"
-            weight="medium"
-          >{`Welcome to ${quiz.name} quiz`}</Typography>
-        </div>
+        !loading ? (
+          <Router>
+            <Switch>
+              <Route
+                path={`${urlRoot(quiz)}/register`}
+                component={Registration}
+              />
+              <PrivateRoute
+                path={`${urlRoot(quiz)}/`}
+                redirectRoute={`${urlRoot(quiz)}/register`}
+                condition={!isLoggedIn()}
+                component={ShowAttempt}
+              />
+            </Switch>
+          </Router>
+        ) : (
+          <></>
+        )
       ) : (
         <div className="flex flex-row justify-between">
           <Typography className="flex" style="h2" weight="medium">
@@ -32,7 +65,7 @@ const Attempt = ({ quiz, questions }) => {
           </Typography>
         </div>
       )}
-    </div>
+    </AttemptsProvider>
   );
 };
 
