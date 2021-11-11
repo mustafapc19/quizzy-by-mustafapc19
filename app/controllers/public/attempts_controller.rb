@@ -14,12 +14,12 @@ class Public::AttemptsController < ApplicationController
       return
     end
 
-    @questions = @quiz.quiz_questions.map do |question|
+    @questions = @quiz.questions.map do |question|
       {
         "id" => question.id,
         "name" => question.name,
         "created_at" => question.created_at,
-        "options" => question.quiz_options.map {
+        "options" => question.options.map {
           |option| { id: option.id, name: option.name } }
       }
     end
@@ -71,6 +71,6 @@ class Public::AttemptsController < ApplicationController
     def attempt_param
       params.require(:attempt_attributes).permit(
         :quiz_id,
-        attempt_answers_attributes: [[:quiz_question_id, :quiz_option_id]])
+        attempt_answers_attributes: [[:question_id, :option_id]])
     end
 end

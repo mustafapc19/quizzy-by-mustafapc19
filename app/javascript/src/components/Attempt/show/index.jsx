@@ -53,9 +53,9 @@ const ShowAttempt = () => {
       }
 
       response.data.attempt_answers.forEach(attempt_answer => {
-        if (attempt_answer.quiz_option_id) {
-          answers[attempt_answer.quiz_question_id].options[
-            attempt_answer.quiz_option_id
+        if (attempt_answer.option_id) {
+          answers[attempt_answer.question_id].options[
+            attempt_answer.option_id
           ].selected = true;
         }
       });
@@ -113,8 +113,8 @@ const ShowAttempt = () => {
                           );
 
                           return {
-                            quiz_question_id: question.id,
-                            quiz_option_id: selected_option,
+                            question_id: question.id,
+                            option_id: selected_option,
                           };
                         }
                       ),

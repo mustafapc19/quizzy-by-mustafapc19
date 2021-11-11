@@ -12,7 +12,7 @@ class QuizOptionTest < ActiveSupport::TestCase
     @quiz.save
     @question = QuizQuestion.new(name: "test_question", quiz_id: @quiz.id)
     @question.save
-    @option = QuizOption.new(name: "test_option", quiz_question_id: @question.id)
+    @option = QuizOption.new(name: "test_option", question_id: @question.id)
   end
 
   def test_option_should_be_valid
@@ -26,12 +26,12 @@ class QuizOptionTest < ActiveSupport::TestCase
 end
 
   def test_question_id_should_be_present
-    @option.quiz_question_id = nil
+    @option.question_id = nil
     assert_not @option.valid?
   end
 
   def test_question_id_should_be_valid
-    @option.quiz_question_id = -1
+    @option.question_id = -1
     assert_not @option.valid?
     assert_equal ["Quiz question must exist"], @option.errors.full_messages
   end

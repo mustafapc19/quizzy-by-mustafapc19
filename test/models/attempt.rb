@@ -25,12 +25,12 @@ class AttemptTest < ActiveSupport::TestCase
   end
 
   def test_submitted_true_if_answers_exist
-    @quiz_question = @quiz.quiz_questions.new(name: "question")
-    @quiz_option = @quiz_question.quiz_options.new(name: "option")
-    @quiz_question.save
+    @question = @quiz.questions.new(name: "question")
+    @option = @question.options.new(name: "option")
+    @question.save
     @attempt.attempt_answers.new(
-      quiz_question_id: @quiz_question.id,
-      quiz_option_id: @quiz_option.id)
+      question_id: @question.id,
+      option_id: @option.id)
     @attempt.save
 
     assert @attempt.submitted
