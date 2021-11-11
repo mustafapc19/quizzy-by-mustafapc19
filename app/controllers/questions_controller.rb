@@ -7,19 +7,14 @@ class QuestionsController < ApplicationController
 
   def index
     authorize @quiz
-    @questions = @quiz.questions.map do |question|
-      { "question" => question, "options" => question.options }
-    end
-    render status: :ok, json: @questions.to_json
+    @questions = @quiz.questions
   end
 
   def create
     authorize @quiz
-    question = @quiz.questions.new(name: question_params[:name])
 
-    question_params[:options].each do |option|
-      question.options.new(option)
-    end
+    question = @quiz.questions.new()
+    question.attributes = question_params
 
     if question.save
       render status: :ok,
@@ -31,38 +26,34 @@ class QuestionsController < ApplicationController
   end
 
   def update
-    authorize @quiz
-    question = @quiz.questions.find_by(id: params[:id])
-    question.name = question_params[:name]
+    authorize_and_find_question
 
-    question_params[:options].each do |option|
-      question.options.update_or_create_by({ id: option[:id] }, option)
-    end
+    @question.attributes = question_params
 
-    if question.save
+    if @question.save
       render status: :ok,
         json: { notice: t("successfully_updated", entity: "Question") }
     else
-      errors = question.errors.full_messages.to_sentence
+      errors = @question.errors.full_messages.to_sentence
       render status: :unprocessable_entity, json: { error: errors }
     end
   end
 
   def destroy
-    authorize @quiz
-    question = @quiz.questions.find_by(id: params[:id])
-    if question.destroy
+    authorize_and_find_question
+
+    if @question.destroy
       render status: :ok, json: {}
     else
       render status: :unprocessable_entity,
-        json: { error: question.errors.full_messages.to_sentence }
+        json: { error: @question.errors.full_messages.to_sentence }
     end
 end
 
   private
 
     def question_params
-      params.require(:question).permit(:name, options: [[:name, :correct, :id]])
+      params.require(:question).permit(:name, options_attributes: [[:name, :correct, :id, :_destroy]])
     end
 
     def load_quiz
@@ -70,5 +61,10 @@ end
       unless @quiz
         render status: :not_found, json: { error: t("quiz.not_found") }
       end
+    end
+
+    def authorize_and_find_question
+      authorize @quiz
+      @question = @quiz.questions.find_by(id: params[:id])
     end
 end
