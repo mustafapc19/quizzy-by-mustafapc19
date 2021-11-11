@@ -26,7 +26,7 @@ const ListQuizzes = ({ quizzes }) => {
         Cell: ({ row }) => (
           <Link
             to={{
-              pathname: "show_quiz",
+              pathname: "/quiz/show",
               state: { quiz: quizzes[row.original] },
             }}
           >

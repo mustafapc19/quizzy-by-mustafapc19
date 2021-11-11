@@ -31,7 +31,7 @@ const ShowQuiz = () => {
         <Button
           className="flex"
           label="Add new quiz"
-          onClick={() => (window.location.href = "/create_quiz")}
+          onClick={() => (window.location.href = "/quiz/create")}
         ></Button>
       </div>
       {Object.keys(quizzes).length === 0 ? (

@@ -69,25 +69,25 @@ const App = () => {
             <Switch>
               <Route exact path="/login" component={Login} />
               <PrivateRoute
-                path="/show_quiz"
+                path="/quiz/show"
                 redirectRoute="/login"
                 condition={!isLoggedIn}
                 component={ShowQuestions}
               />
               <PrivateRoute
-                path="/create_quiz"
+                path="/quiz/create"
                 redirectRoute="/login"
                 condition={!isLoggedIn}
                 component={CreateQuiz}
               />
               <PrivateRoute
-                path="/edit_question"
+                path="/quiz/question/edit"
                 redirectRoute="/login"
                 condition={!isLoggedIn}
                 component={EditQuestion}
               />
               <PrivateRoute
-                path="/create_question"
+                path="/quiz/question/create"
                 redirectRoute="/login"
                 condition={!isLoggedIn}
                 component={CreateQuestion}

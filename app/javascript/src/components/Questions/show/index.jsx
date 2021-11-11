@@ -46,7 +46,7 @@ const ShowQuestions = () => {
             label={
               <Link
                 to={{
-                  pathname: "create_question",
+                  pathname: "/quiz/question/create",
                   state: { quiz: quiz },
                 }}
               >
@@ -105,7 +105,7 @@ const ShowQuestions = () => {
                 label={
                   <Link
                     to={{
-                      pathname: "edit_question",
+                      pathname: "/quiz/question/edit",
                       state: { quiz: quiz, question: question },
                     }}
                   >
