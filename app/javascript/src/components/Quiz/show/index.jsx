@@ -14,7 +14,11 @@ const ShowQuiz = () => {
     try {
       const response = await quizzesApi.list();
       let quizzes = {};
-      response.data.quizzes.forEach(quiz => (quizzes[quiz.id] = quiz));
+      response.data.quizzes.forEach(quiz => {
+        const date = new Date(quiz.created_at);
+        quiz.time = date.getTime();
+        quizzes[quiz.id] = quiz;
+      });
       setQuizzes(quizzes);
     } catch (error) {
       logger.error(error);

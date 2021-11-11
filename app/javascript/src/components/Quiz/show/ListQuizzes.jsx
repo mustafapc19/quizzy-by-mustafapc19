@@ -13,7 +13,11 @@ const ListQuizzes = ({ quizzes }) => {
   const [showConfirmDeleteModal, setShowConfirmDeleteModal] = useState(false);
   const [onFocusQuiz, setOnFocusQuiz] = useState({});
 
-  const data = React.useMemo(() => Object.keys(quizzes), [quizzes]);
+  const data = React.useMemo(
+    () =>
+      Object.keys(quizzes).sort((a, b) => quizzes[b].time - quizzes[a].time),
+    [quizzes]
+  );
 
   const columns = React.useMemo(
     () => [
