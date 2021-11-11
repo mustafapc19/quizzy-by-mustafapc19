@@ -35,10 +35,9 @@ const ConfirmDelete = ({
               });
 
               Toastr.success("Question deleted successfuly");
-              setQuestions(old => {
-                delete old[question.id];
-                return { ...old };
-              });
+              setQuestions(old => [
+                ...old.filter(item => item.id !== question.id),
+              ]);
               setShowConfirmDeleteModal(false);
             } catch (error) {
               handleError(error);

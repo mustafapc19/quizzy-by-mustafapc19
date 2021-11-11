@@ -10,7 +10,7 @@ import ConfirmDelete from "./ConfirmDelete";
 
 const ShowQuestions = () => {
   const [quiz, setQuiz] = useState(useLocation().state.quiz);
-  const [questions, setQuestions] = useState({});
+  const [questions, setQuestions] = useState([]);
   const [showConfirmDeleteModal, setShowConfirmDeleteModal] = useState(false);
   const [onFocusQuestion, setOnFocusQuestion] = useState({});
 
@@ -18,10 +18,14 @@ const ShowQuestions = () => {
     const response = await questionsApi.list({ quiz_id: quiz.id });
     logger.info(response);
     response.data.questions.forEach(item => {
-      questions[item.question.id] = { options: item.options, ...item.question };
+      questions.push({
+        id: item.question.id,
+        options: item.options,
+        ...item.question,
+      });
     });
 
-    setQuestions({ ...questions });
+    setQuestions([...questions]);
   }, []);
 
   return (
@@ -46,7 +50,7 @@ const ShowQuestions = () => {
               </Link>
             }
           />
-          {Object.keys(questions).length !== 0 && !(quiz.slug?.length > 0) ? (
+          {questions.length !== 0 && !(quiz.slug?.length > 0) ? (
             <Button
               className="flex"
               label="Publish"
@@ -79,18 +83,18 @@ const ShowQuestions = () => {
       ) : (
         <></>
       )}
-      {Object.keys(questions).length === 0 ? (
+      {questions.length === 0 ? (
         <div className="flex flex-row justify-center">
           <Typography className="mt-20">
             There are no questions in this quiz.
           </Typography>
         </div>
       ) : (
-        Object.keys(questions).map((key, index) => (
+        questions.map((question, index) => (
           <div key={index} className="pb-8 pt-2">
             <div className="flex flex-row space-x-16 pt-2">
               <Typography style="body2">{`Question ${index + 1}`}</Typography>
-              <Typography style="h4">{questions[key].name}</Typography>
+              <Typography style="h4">{question.name}</Typography>
               <Button
                 className="flex"
                 style="secondary"
@@ -98,7 +102,7 @@ const ShowQuestions = () => {
                   <Link
                     to={{
                       pathname: "edit_question",
-                      state: { quiz: quiz, question: questions[key] },
+                      state: { quiz: quiz, question: question },
                     }}
                   >
                     Edit
@@ -109,13 +113,13 @@ const ShowQuestions = () => {
                 style="danger"
                 label="Delete"
                 onClick={() => {
-                  setOnFocusQuestion(questions[key]);
+                  setOnFocusQuestion(question);
                   setShowConfirmDeleteModal(true);
                 }}
               ></Button>
             </div>
             <div className="flex flex-col  pt-2">
-              {questions[key].options.map((option, index) => (
+              {question.options.map((option, index) => (
                 <div key={index} className="flex flex-row space-x-20">
                   <Typography style="body2">{`Option ${index + 1}`}</Typography>
                   <Typography style="h5">{option.name}</Typography>
