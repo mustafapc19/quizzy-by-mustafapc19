@@ -18,13 +18,17 @@ const ShowQuestions = () => {
     const response = await questionsApi.list({ quiz_id: quiz.id });
     logger.info(response);
     response.data.questions.forEach(item => {
+      const date = new Date(item.question.created_at);
+      const time = date.getTime();
       questions.push({
         id: item.question.id,
         options: item.options,
+        time,
         ...item.question,
       });
     });
 
+    questions.sort((a, b) => b.time - a.time);
     setQuestions([...questions]);
   }, []);
 
