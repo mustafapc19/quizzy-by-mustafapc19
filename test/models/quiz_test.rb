@@ -40,4 +40,15 @@ class QuizTest < ActiveSupport::TestCase
     quiz_with_same_title.slug = "test"
     assert_not quiz_with_same_title.save
   end
+
+  def test_unique_number_should_be_added_to_same_slug
+    @quiz.slug = "test"
+    @quiz.save
+
+    quiz_with_same_title = Quiz.new(name: "test", user_id: @user.id)
+    quiz_with_same_title.set_slug
+    quiz_with_same_title.save
+
+    assert "#{@quiz.slug}-2" == quiz_with_same_title.slug
+  end
 end
