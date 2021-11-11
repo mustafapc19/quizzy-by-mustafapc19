@@ -4,6 +4,7 @@ import { Button, Modal, Toastr, Typography } from "neetoui";
 import PropTypes from "prop-types";
 
 import questionsApi from "apis/questions";
+import handleError from "common/error";
 
 const ConfirmDelete = ({
   quiz,
@@ -40,10 +41,7 @@ const ConfirmDelete = ({
               });
               setShowConfirmDeleteModal(false);
             } catch (error) {
-              logger.error(error?.response?.data?.error);
-              Toastr.error(
-                error?.response?.data?.error || "Something went wrong"
-              );
+              handleError(error);
             }
           }}
         />

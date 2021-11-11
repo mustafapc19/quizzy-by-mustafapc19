@@ -1,9 +1,8 @@
 import React, { useState } from "react";
 
-import { Toastr } from "neetoui";
-
 import authApi from "apis/auth";
-import { setAuthHeaders } from "apis/axios";
+import { resetAuthTokens, setAuthHeaders } from "apis/axios";
+import handleError from "common/error";
 import LoginForm from "components/Authentication/Form/LoginForm";
 import { setToLocalStorage } from "helpers/storage";
 
@@ -28,8 +27,8 @@ const Login = () => {
       setLoading(false);
       window.location.href = "/";
     } catch (error) {
-      logger.error(error);
-      Toastr.error(error?.response?.data?.error || "Something went wrong");
+      resetAuthTokens();
+      handleError(error);
       setLoading(false);
     }
   };

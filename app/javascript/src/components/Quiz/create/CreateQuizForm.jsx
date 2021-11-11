@@ -5,6 +5,7 @@ import { Button, Toastr } from "neetoui";
 import { Input } from "neetoui/formik";
 
 import quizzesApi from "apis/quizzes";
+import handleError from "common/error";
 
 import {
   CREATE_QUIZ_FORM_INITIAL_VALUE,
@@ -27,10 +28,7 @@ const CreateQuizForm = () => {
             Toastr.success("Quiz created successfuly");
             window.location.href = "/";
           } catch (error) {
-            Toastr.error(
-              error?.response?.data?.error || "Something went wrong"
-            );
-            logger.error(error);
+            handleError(error);
           }
         }}
       >

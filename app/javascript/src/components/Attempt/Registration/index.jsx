@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 
-import { Toastr, Typography } from "neetoui";
+import { Typography } from "neetoui";
 
 import attemptsApi from "apis/attempts";
 import authApi from "apis/auth";
 import { setAuthHeaders } from "apis/axios";
+import handleError from "common/error";
 import { useAttempts } from "contexts/attempts";
 import { setToLocalStorage } from "helpers/storage";
 
@@ -54,8 +55,7 @@ const Registration = () => {
       setAttempts(old => ({ ...old, id: response.data.id }));
       window.location.href = `${urlRoot(attempts.quiz)}/`;
     } catch (error) {
-      logger.error(error);
-      Toastr.error(error?.response?.data?.error || "Something went wrong");
+      handleError(error);
     }
   };
 

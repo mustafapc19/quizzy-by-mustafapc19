@@ -6,6 +6,7 @@ import { Input } from "neetoui/formik";
 import PropTypes from "prop-types";
 
 import quizzesApi from "apis/quizzes";
+import handleError from "common/error";
 import { useQuizzes } from "contexts/quizzes";
 
 import { EDIT_QUIZ_VALIDATION } from "./constants";
@@ -34,10 +35,7 @@ const EditQuizForm = ({ quiz, setShowEditQuizModal }) => {
             Toastr.success("Quiz updated successfuly");
             setShowEditQuizModal(false);
           } catch (error) {
-            Toastr.error(
-              error?.response?.data?.error || "Something went wrong"
-            );
-            logger.error(error);
+            handleError(error);
           }
         }}
       >

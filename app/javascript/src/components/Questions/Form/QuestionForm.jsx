@@ -3,20 +3,22 @@ import React, { useEffect, useState } from "react";
 import { Form, Formik } from "formik";
 import { Button, Dropdown, Toastr, Typography } from "neetoui";
 import { Input } from "neetoui/formik";
-import PropTypes from "prop-types";
+import { either, isEmpty, isNil } from "ramda";
 import { useHistory } from "react-router-dom";
 
 import questionsApi from "apis/questions";
+import handleError from "common/error";
 
 import { CREATE_QUESTION_FORM_INITIAL_VALUE } from "./constant";
 
 const QuestionForm = ({ quiz, question }) => {
+  const editMode = !either(isNil, isEmpty)(question);
   const [options, setOptions] = useState([{ name: "" }, { name: "" }]);
   const [correctOptionIndex, setCorrectOptionIndex] = useState(0);
   let history = useHistory();
 
   useEffect(() => {
-    if (question) {
+    if (editMode) {
       setOptions(question.options);
       setCorrectOptionIndex(
         question.options.findIndex(option => option.correct)
@@ -25,23 +27,74 @@ const QuestionForm = ({ quiz, question }) => {
   }, []);
 
   const questionToInitialValue = question => {
-    const initialValue = {};
-    initialValue.name = question.name;
-    question.options.forEach((option, index) => {
-      initialValue[`option-${index}`] = option;
-    });
-    return initialValue;
+    if (editMode) {
+      const initialValue = {};
+      initialValue.name = question.name;
+      question.options.forEach((option, index) => {
+        initialValue[`option-${index}`] = option;
+      });
+      return initialValue;
+    }
+
+    return CREATE_QUESTION_FORM_INITIAL_VALUE;
+  };
+
+  const buildApiPayload = values => {
+    const payload = {
+      question: {
+        name: values.name,
+        options_attributes: options.map((option, index) => ({
+          name: option.name,
+          id: option.id,
+          correct: index === correctOptionIndex,
+        })),
+      },
+    };
+    if (editMode) {
+      payload.question.options_attributes.push(
+        question.options
+          .filter(
+            option => options.findIndex(item => item.id === option.id) === -1
+          )
+          .map(option => ({
+            name: option.name,
+            id: option.id,
+            _destroy: true,
+          }))
+      );
+    }
+
+    return payload;
+  };
+
+  const onSubmit = async (values, { setSubmitting }) => {
+    try {
+      if (editMode) {
+        await questionsApi.update({
+          quiz_id: quiz.id,
+          question_id: question.id,
+          payload: buildApiPayload(values),
+        });
+        Toastr.success("Question updated successfully");
+      } else {
+        await questionsApi.create({
+          quiz_id: quiz.id,
+          payload: buildApiPayload(values),
+        });
+        Toastr.success("Question created successfully");
+      }
+      setSubmitting(false);
+      history.goBack();
+    } catch (error) {
+      handleError(error);
+    }
   };
 
   return (
     <div>
       <Typography>{`${quiz.name} quiz`}</Typography>
       <Formik
-        initialValues={
-          question
-            ? questionToInitialValue(question)
-            : CREATE_QUESTION_FORM_INITIAL_VALUE
-        }
+        initialValues={questionToInitialValue(question)}
         validate={values => {
           const errors = {};
           if (!values.name.trim()) {
@@ -55,49 +108,9 @@ const QuestionForm = ({ quiz, question }) => {
 
           return errors;
         }}
-        onSubmit={async (values, { setSubmitting }) => {
-          try {
-            if (question) {
-              await questionsApi.update({
-                quiz_id: quiz.id,
-                question_id: question.id,
-                payload: {
-                  question: {
-                    name: values.name,
-                    options: options.map((option, index) => ({
-                      name: option.name,
-                      id: option.id,
-                      correct: index === correctOptionIndex,
-                    })),
-                  },
-                },
-              });
-              Toastr.success("Question updated successfully");
-            } else {
-              await questionsApi.create({
-                quiz_id: quiz.id,
-                payload: {
-                  question: {
-                    name: values.name,
-                    options: options.map((option, index) => ({
-                      name: option.name,
-                      correct: index === correctOptionIndex,
-                    })),
-                  },
-                },
-              });
-              Toastr.success("Question created successfully");
-            }
-            setSubmitting(false);
-            history.goBack();
-            // window.location.href = "/";
-          } catch (error) {
-            Toastr.error(
-              error?.response?.data?.error || "Something went wrong"
-            );
-            logger.error(error.response.data.error);
-          }
-        }}
+        onSubmit={(values, { setSubmitting }) =>
+          onSubmit(values, { setSubmitting })
+        }
       >
         {({ isSubmitting }) => (
           <Form className="space-y-4">
@@ -165,11 +178,6 @@ const QuestionForm = ({ quiz, question }) => {
       </Formik>
     </div>
   );
-};
-
-QuestionForm.propTypes = {
-  quiz: PropTypes.object,
-  question: PropTypes.object,
 };
 
 export default QuestionForm;

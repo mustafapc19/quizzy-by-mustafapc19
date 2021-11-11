@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 
-import { Toastr } from "neetoui";
 import { either, isEmpty, isNil } from "ramda";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 
 import authApi from "apis/auth";
-import { setAuthHeaders } from "apis/axios";
+import { resetAuthTokens, setAuthHeaders } from "apis/axios";
+import handleError from "common/error";
 import { initializeLogger } from "common/logger";
 import Login from "components/Authentication/Login";
 import PrivateRoute from "components/Common/PrivateRoute";
@@ -48,11 +48,11 @@ const App = () => {
     try {
       await authApi.logout();
       clearAuthFromLocalStorage();
+      resetAuthTokens();
       window.location.href = "/";
       setIsLoggedIn(false);
     } catch (error) {
-      Toastr.error(error?.response?.data?.error || "Something went wrong");
-      logger.error(error);
+      handleError(error);
     }
   };
 

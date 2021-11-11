@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 
-import { Button, Toastr, Typography } from "neetoui";
+import { Button, Typography } from "neetoui";
 
 import attemptsApi from "apis/attempts";
+import handleError from "common/error";
 import { useAttempts } from "contexts/attempts";
 
 const createInitialAnswers = questions => {
@@ -62,8 +63,7 @@ const ShowAttempt = () => {
       setAnswers({ ...answers });
       logger.info(response);
     } catch (error) {
-      logger.error(error);
-      Toastr.error(error?.response?.data?.error || "Something went wrong");
+      handleError(error);
     }
     setLoading(false);
   }, []);
@@ -124,10 +124,7 @@ const ShowAttempt = () => {
 
                 setSubmittedOptions(response.data.results);
               } catch (error) {
-                logger.error(error);
-                Toastr.error(
-                  error?.response?.data?.error || "Something went wrong"
-                );
+                handleError(error);
               }
             }}
           >

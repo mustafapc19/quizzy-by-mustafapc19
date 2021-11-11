@@ -17,7 +17,7 @@ const ShowQuestions = () => {
   useEffect(async () => {
     const response = await questionsApi.list({ quiz_id: quiz.id });
     logger.info(response);
-    response.data.forEach(item => {
+    response.data.questions.forEach(item => {
       questions[item.question.id] = { options: item.options, ...item.question };
     });
 
