@@ -2,17 +2,16 @@
 
 require "test_helper"
 
-class QuizOptionTest < ActiveSupport::TestCase
+class OptionTest < ActiveSupport::TestCase
   def setup
-    @user = User.new(
-      first_name: "Sam", last_name: "Smith", email: "sam@example.com", password: "password",
-      password_confirmation: "password")
-    @user.save
-    @quiz = Quiz.new(name: "test", user_id: @user.id)
-    @quiz.save
-    @question = QuizQuestion.new(name: "test_question", quiz_id: @quiz.id)
-    @question.save
-    @option = QuizOption.new(name: "test_option", question_id: @question.id)
+    @user = create(:user)
+    @quiz = create(:quiz, user_id: @user.id)
+    @question = build(:question, quiz_id: @quiz.id)
+    @question.options << build(:option)
+    @question.options << build(:option)
+    @option = @question.options.first
+    @option2 = @question.options.last
+    @option.correct = true
   end
 
   def test_option_should_be_valid
