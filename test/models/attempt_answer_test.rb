@@ -4,11 +4,8 @@ require "test_helper"
 
 class AttemptAnswerTest < ActiveSupport::TestCase
   def setup
-    @user = User.new(
-      first_name: "Sam", last_name: "Smith", email: "lol@example.com", password: "password",
-      password_confirmation: "password")
+    @user = create(:user)
 
-    @user.save
     @quiz = @user.quizzes.new(name: "test")
 
     @question = @quiz.questions.new(name: "question")
