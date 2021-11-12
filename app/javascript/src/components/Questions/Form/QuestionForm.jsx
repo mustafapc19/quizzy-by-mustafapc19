@@ -52,13 +52,14 @@ const QuestionForm = ({ quiz, question }) => {
     };
     if (editMode) {
       payload.question.options_attributes.push(
-        question.options
+        ...question.options
           .filter(
             option => options.findIndex(item => item.id === option.id) === -1
           )
           .map(option => ({
             name: option.name,
             id: option.id,
+            correct: false,
             _destroy: true,
           }))
       );
