@@ -30,10 +30,11 @@ const ShowQuiz = () => {
   };
 
   return (
-    <div className="space-y-2">
+    <div className="mx-10 space-y-2">
       <div className="flex flex-row justify-end">
         <Button
           className="flex"
+          size="large"
           label="Add new quiz"
           onClick={handleNewQuiz}
         ></Button>

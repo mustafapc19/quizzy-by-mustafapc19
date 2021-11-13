@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 
 import { Form, Formik } from "formik";
+import { Close } from "neetoicons";
 import { Button, Dropdown, Toastr, Typography } from "neetoui";
-import { Input } from "neetoui/formik";
+import { Input, Textarea } from "neetoui/formik";
 import { either, isEmpty, isNil } from "ramda";
 import { useHistory } from "react-router-dom";
 
@@ -110,16 +111,16 @@ const QuestionForm = ({ quiz, question }) => {
   };
 
   return (
-    <div>
-      <Typography>{`${quiz.name} quiz`}</Typography>
+    <div className="px-10 py-2">
+      <Typography style="h2" weight="medium">{`${quiz.name} quiz`}</Typography>
       <Formik
         initialValues={questionToInitialValue(question)}
         validate={formValidation}
         onSubmit={onSubmitForm}
       >
         {({ isSubmitting }) => (
-          <Form className="space-y-4">
-            <Input type="name" className="w-1/3" name="name" label="Question" />
+          <Form className="mt-6 ml-2 space-y-4 w-1/3">
+            <Textarea type="name" name="name" label="Question" />
             {options.map((option, index) => {
               const optionOnChange = e => {
                 options[index].name = e.target.value;
@@ -138,20 +139,21 @@ const QuestionForm = ({ quiz, question }) => {
               };
 
               return (
-                <div key={index}>
+                <div className="flex flex-row" key={index}>
                   <Input
                     type="string"
+                    className="flex"
                     value={option.name}
                     onChange={optionOnChange}
-                    className="w-1/3"
                     name={`option-${index}`}
                     label={`Option ${index + 1}`}
                   />
                   {index >= 2 ? (
                     <Button
                       type="button"
+                      className="flex mt-4"
                       style="text"
-                      label="remove"
+                      icon={Close}
                       onClick={optionOnRemove}
                     />
                   ) : (
@@ -189,7 +191,13 @@ const QuestionForm = ({ quiz, question }) => {
                 );
               })}
             </Dropdown>
-            <Button type="submit" label="Submit" disabled={isSubmitting} />
+            <Button
+              className="ml-2"
+              size="large"
+              type="submit"
+              label="Submit"
+              disabled={isSubmitting}
+            />
           </Form>
         )}
       </Formik>
