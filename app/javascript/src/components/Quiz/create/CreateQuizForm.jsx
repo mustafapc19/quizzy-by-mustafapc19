@@ -13,24 +13,26 @@ import {
 } from "./constants";
 
 const CreateQuizForm = () => {
+  const handleSubmit = async (values, { setSubmitting }) => {
+    try {
+      const response = await quizzesApi.create({
+        quiz: { name: values.name },
+      });
+      logger.info(response.data);
+      setSubmitting(false);
+      Toastr.success("Quiz created successfuly");
+      window.location.href = "/";
+    } catch (error) {
+      handleError(error);
+    }
+  };
+
   return (
     <div>
       <Formik
         initialValues={CREATE_QUIZ_FORM_INITIAL_VALUE}
         validationSchema={CREATE_QUIZ_VALIDATION}
-        onSubmit={async (values, { setSubmitting }) => {
-          try {
-            const response = await quizzesApi.create({
-              quiz: { name: values.name },
-            });
-            logger.info(response.data);
-            setSubmitting(false);
-            Toastr.success("Quiz created successfuly");
-            window.location.href = "/";
-          } catch (error) {
-            handleError(error);
-          }
-        }}
+        onSubmit={handleSubmit}
       >
         {({ isSubmitting }) => (
           <Form className="space-y-4">

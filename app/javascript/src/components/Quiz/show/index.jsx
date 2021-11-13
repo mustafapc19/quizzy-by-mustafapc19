@@ -25,13 +25,17 @@ const ShowQuiz = () => {
     }
   }, []);
 
+  const handleNewQuiz = () => {
+    window.location.href = "/quiz/create";
+  };
+
   return (
     <div className="space-y-2">
       <div className="flex flex-row justify-end">
         <Button
           className="flex"
           label="Add new quiz"
-          onClick={() => (window.location.href = "/quiz/create")}
+          onClick={handleNewQuiz}
         ></Button>
       </div>
       {Object.keys(quizzes).length === 0 ? (

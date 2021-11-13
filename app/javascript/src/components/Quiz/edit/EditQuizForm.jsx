@@ -12,32 +12,34 @@ import { useQuizzes } from "contexts/quizzes";
 import { EDIT_QUIZ_VALIDATION } from "./constants";
 
 const EditQuizForm = ({ quiz, setShowEditQuizModal }) => {
-  const setQuizzes = useQuizzes()[1];
+  const [quizzes, setQuizzes] = useQuizzes();
+
+  const handleSubmit = async (values, { setSubmitting }) => {
+    try {
+      const response = await quizzesApi.update(quiz.id, {
+        quiz: { name: values.name },
+      });
+      logger.info(response.data);
+
+      quizzes[quiz.id].name = values.name;
+      setQuizzes({ ...quizzes });
+
+      setSubmitting(false);
+      Toastr.success("Quiz updated successfuly");
+      setShowEditQuizModal(false);
+    } catch (error) {
+      handleError(error);
+    }
+  };
+
+  const closeModal = () => setShowEditQuizModal(false);
 
   return (
     <div>
       <Formik
         initialValues={{ name: quiz.name }}
         validationSchema={EDIT_QUIZ_VALIDATION}
-        onSubmit={async (values, { setSubmitting }) => {
-          try {
-            const response = await quizzesApi.update(quiz.id, {
-              quiz: { name: values.name },
-            });
-            logger.info(response.data);
-
-            setQuizzes(old => {
-              old[quiz.id].name = values.name;
-              return { ...old };
-            });
-
-            setSubmitting(false);
-            Toastr.success("Quiz updated successfuly");
-            setShowEditQuizModal(false);
-          } catch (error) {
-            handleError(error);
-          }
-        }}
+        onSubmit={handleSubmit}
       >
         {({ isSubmitting }) => (
           <Form className="space-y-4">
@@ -53,7 +55,7 @@ const EditQuizForm = ({ quiz, setShowEditQuizModal }) => {
               style="text"
               type="button"
               label="Cancel"
-              onClick={() => setShowEditQuizModal(false)}
+              onClick={closeModal}
             />
           </Form>
         )}

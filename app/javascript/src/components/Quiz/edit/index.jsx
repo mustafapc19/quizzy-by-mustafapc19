@@ -6,13 +6,17 @@ import PropTypes from "prop-types";
 import EditQuizForm from "./EditQuizForm";
 
 const EditQuiz = ({ quiz, showEditQuizModal, setShowEditQuizModal }) => {
+  const closeModal = () => {
+    setShowEditQuizModal(false);
+  };
+
   return (
     <div className="w-full">
       <Modal
         className="p-4"
         size="xs"
         isOpen={showEditQuizModal}
-        onClose={() => setShowEditQuizModal(false)}
+        onClose={closeModal}
         closeButton={false}
       >
         <EditQuizForm

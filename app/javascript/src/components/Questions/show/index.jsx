@@ -32,6 +32,17 @@ const ShowQuestions = () => {
     setQuestions([...questions]);
   }, []);
 
+  const handlePublish = async () => {
+    const response = await quizzesApi.update(quiz.id, {
+      quiz: {
+        publish: true,
+      },
+    });
+    logger.info(response.data);
+    quiz.slug = response.data.slug;
+    setQuiz({ ...quiz });
+  };
+
   return (
     <>
       <div className="flex flex-row justify-between">
@@ -55,20 +66,7 @@ const ShowQuestions = () => {
             }
           />
           {questions.length !== 0 && !(quiz.slug?.length > 0) ? (
-            <Button
-              className="flex"
-              label="Publish"
-              onClick={async () => {
-                const response = await quizzesApi.update(quiz.id, {
-                  quiz: {
-                    publish: true,
-                  },
-                });
-                logger.info(response.data);
-                quiz.slug = response.data.slug;
-                setQuiz({ ...quiz });
-              }}
-            />
+            <Button className="flex" label="Publish" onClick={handlePublish} />
           ) : (
             <></>
           )}
@@ -94,49 +92,55 @@ const ShowQuestions = () => {
           </Typography>
         </div>
       ) : (
-        questions.map((question, index) => (
-          <div key={index} className="pb-8 pt-2">
-            <div className="flex flex-row space-x-16 pt-2">
-              <Typography style="body2">{`Question ${index + 1}`}</Typography>
-              <Typography style="h4">{question.name}</Typography>
-              <Button
-                className="flex"
-                style="secondary"
-                label={
-                  <Link
-                    to={{
-                      pathname: "/quiz/question/edit",
-                      state: { quiz: quiz, question: question },
-                    }}
-                  >
-                    Edit
-                  </Link>
-                }
-              />
-              <Button
-                style="danger"
-                label="Delete"
-                onClick={() => {
-                  setOnFocusQuestion(question);
-                  setShowConfirmDeleteModal(true);
-                }}
-              ></Button>
+        questions.map((question, index) => {
+          const optionLabel = `Option ${index + 1}`;
+
+          const onDelete = () => {
+            setOnFocusQuestion(question);
+            setShowConfirmDeleteModal(true);
+          };
+
+          return (
+            <div key={index} className="pb-8 pt-2">
+              <div className="flex flex-row space-x-16 pt-2">
+                <Typography style="body2">{`Question ${index + 1}`}</Typography>
+                <Typography style="h4">{question.name}</Typography>
+                <Button
+                  className="flex"
+                  style="secondary"
+                  label={
+                    <Link
+                      to={{
+                        pathname: "/quiz/question/edit",
+                        state: { quiz: quiz, question: question },
+                      }}
+                    >
+                      Edit
+                    </Link>
+                  }
+                />
+                <Button
+                  style="danger"
+                  label="Delete"
+                  onClick={onDelete}
+                ></Button>
+              </div>
+              <div className="flex flex-col pt-2">
+                {question.options.map((option, index) => (
+                  <div key={index} className="flex flex-row space-x-20">
+                    <Typography style="body2">{optionLabel}</Typography>
+                    <Typography style="h5">{option.name}</Typography>
+                    {option.correct ? (
+                      <div className="text-green-400">Correct</div>
+                    ) : (
+                      <></>
+                    )}
+                  </div>
+                ))}
+              </div>
             </div>
-            <div className="flex flex-col  pt-2">
-              {question.options.map((option, index) => (
-                <div key={index} className="flex flex-row space-x-20">
-                  <Typography style="body2">{`Option ${index + 1}`}</Typography>
-                  <Typography style="h5">{option.name}</Typography>
-                  {option.correct ? (
-                    <div className="text-green-400">Correct</div>
-                  ) : (
-                    <></>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-        ))
+          );
+        })
       )}
       <ConfirmDelete
         quiz={quiz}

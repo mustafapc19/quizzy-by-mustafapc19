@@ -12,7 +12,25 @@ const ConfirmDelete = ({
   showConfirmDeleteModal,
   setShowConfirmDeleteModal,
 }) => {
-  const setQuizzes = useQuizzes()[1];
+  const [quizzes, setQuizzes] = useQuizzes();
+
+  const handleDelete = async () => {
+    try {
+      await quizzesApi.destroy(quiz.id);
+      logger.error(quizzes);
+      delete quizzes[quiz.id];
+      setQuizzes({ ...quizzes });
+
+      Toastr.success("Quiz deleted successfuly");
+      setShowConfirmDeleteModal(false);
+    } catch (error) {
+      handleError(error);
+    }
+  };
+
+  const closeModal = () => {
+    setShowConfirmDeleteModal(false);
+  };
 
   return (
     <div className="w-full">
@@ -20,7 +38,6 @@ const ConfirmDelete = ({
         className="p-4 space-y-2"
         size="xs"
         isOpen={showConfirmDeleteModal}
-        onClose={() => setShowConfirmDeleteModal(false)}
         closeButton={false}
       >
         <Typography>Are you sure?</Typography>
@@ -28,23 +45,9 @@ const ConfirmDelete = ({
           className="mr-2"
           label="Yes"
           style="danger"
-          onClick={async () => {
-            try {
-              await quizzesApi.destroy(quiz.id);
-              setQuizzes(old => [...old.filter(item => item.id !== quiz.id)]);
-
-              Toastr.success("Quiz deleted successfuly");
-              setShowConfirmDeleteModal(false);
-            } catch (error) {
-              handleError(error);
-            }
-          }}
+          onClick={handleDelete}
         />
-        <Button
-          label="Cancel"
-          style="text"
-          onClick={() => setShowConfirmDeleteModal(false)}
-        />
+        <Button label="Cancel" style="text" onClick={closeModal} />
       </Modal>
     </div>
   );

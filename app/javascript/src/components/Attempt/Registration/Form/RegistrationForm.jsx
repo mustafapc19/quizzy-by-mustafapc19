@@ -9,6 +9,18 @@ const RegistrationForm = ({
   setFirstName,
   setLastName,
 }) => {
+  const emailOnChange = e => {
+    setEmail(e.target.value);
+  };
+
+  const firstNameOnChange = e => {
+    setFirstName(e.target.value);
+  };
+
+  const lastNameOnChange = e => {
+    setLastName(e.target.value);
+  };
+
   return (
     <div className="max-w-md ml-10">
       <form className="mt-8 space-y-4" onSubmit={handleSubmit}>
@@ -17,21 +29,21 @@ const RegistrationForm = ({
           type="email"
           required={true}
           placeholder="oliver@example.com"
-          onChange={e => setEmail(e.target.value)}
+          onChange={emailOnChange}
         />
         <Input
           label="First Name"
           type="string"
           required={true}
           placeholder="Eve"
-          onChange={e => setFirstName(e.target.value)}
+          onChange={firstNameOnChange}
         />
         <Input
           label="Second Name"
           type="string"
           required={true}
           placeholder="Smith"
-          onChange={e => setLastName(e.target.value)}
+          onChange={lastNameOnChange}
         />
         <Button type="submit" label="Submit" />
       </form>

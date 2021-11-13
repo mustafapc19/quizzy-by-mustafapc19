@@ -4,6 +4,14 @@ import { Button, Input } from "neetoui";
 import PropTypes from "prop-types";
 
 const LoginForm = ({ handleSubmit, setEmail, setPassword }) => {
+  const handleEmailChange = e => {
+    setEmail(e.target.value);
+  };
+
+  const handlePasswordChange = e => {
+    setPassword(e.target.value);
+  };
+
   return (
     <div
       className="flex items-center justify-center
@@ -21,13 +29,13 @@ const LoginForm = ({ handleSubmit, setEmail, setPassword }) => {
             label="Email"
             type="email"
             placeholder="oliver@example.com"
-            onChange={e => setEmail(e.target.value)}
+            onChange={handleEmailChange}
           />
           <Input
             label="Password"
             type="password"
             placeholder="********"
-            onChange={e => setPassword(e.target.value)}
+            onChange={handlePasswordChange}
           />
           <Button type="submit" label="Submit" />
         </form>

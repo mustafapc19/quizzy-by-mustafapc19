@@ -17,11 +17,7 @@ const NavBar = ({ userData, isLoggedIn, handleLogout }) => {
               <></>
             )}
             {isLoggedIn ? (
-              <Button
-                style="text"
-                label="Logout"
-                onClick={() => handleLogout()}
-              />
+              <Button style="text" label="Logout" onClick={handleLogout} />
             ) : (
               <></>
             )}

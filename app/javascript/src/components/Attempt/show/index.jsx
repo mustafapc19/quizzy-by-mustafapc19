@@ -28,6 +28,7 @@ const ShowAttempt = () => {
   const [correctCount, setCorrectCount] = useState(0);
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(true);
+
   const setSubmittedOptions = result => {
     let correctCount = 0;
     result.forEach(question => {
@@ -68,6 +69,43 @@ const ShowAttempt = () => {
     setLoading(false);
   }, []);
 
+  const showResultText = `Thank you for taking the quiz, here are your results. You
+          have submitted ${correctCount} correct and
+          ${Object.keys(answers).length - correctCount} incorrect answers.`;
+
+  const handleAttempSubmit = async e => {
+    e.preventDefault();
+
+    try {
+      const response = await attemptsApi.update({
+        id: 0,
+        payload: {
+          attempt_attributes: {
+            quiz_id: attempts.quiz.id,
+            attempt_answers_attributes: attempts.questions.map(question => {
+              let selected_option;
+
+              Object.keys(answers[question.id].options).forEach(optionKey => {
+                if (answers[question.id].options[optionKey].selected) {
+                  selected_option = optionKey;
+                }
+              });
+
+              return {
+                question_id: question.id,
+                option_id: selected_option,
+              };
+            }),
+          },
+        },
+      });
+
+      setSubmittedOptions(response.data.results);
+    } catch (error) {
+      handleError(error);
+    }
+  };
+
   return (
     <div className="flex flex-col justify-between mx-8">
       <Typography
@@ -79,55 +117,8 @@ const ShowAttempt = () => {
       </Typography>
       {!loading ? (
         <div className="flex flex-col">
-          {submitted ? (
-            <Typography>{`Thank you for taking the quiz, here are your results. You
-          have submitted ${correctCount} correct and
-          ${
-            Object.keys(answers).length - correctCount
-          } incorrect answers.`}</Typography>
-          ) : (
-            <></>
-          )}
-          <form
-            onSubmit={async e => {
-              e.preventDefault();
-
-              try {
-                const response = await attemptsApi.update({
-                  id: 0,
-                  payload: {
-                    attempt_attributes: {
-                      quiz_id: attempts.quiz.id,
-                      attempt_answers_attributes: attempts.questions.map(
-                        question => {
-                          let selected_option;
-
-                          Object.keys(answers[question.id].options).forEach(
-                            optionKey => {
-                              if (
-                                answers[question.id].options[optionKey].selected
-                              ) {
-                                selected_option = optionKey;
-                              }
-                            }
-                          );
-
-                          return {
-                            question_id: question.id,
-                            option_id: selected_option,
-                          };
-                        }
-                      ),
-                    },
-                  },
-                });
-
-                setSubmittedOptions(response.data.results);
-              } catch (error) {
-                handleError(error);
-              }
-            }}
-          >
+          {submitted ? <Typography>{showResultText}</Typography> : <></>}
+          <form onSubmit={handleAttempSubmit}>
             {attempts.questions.map((question, index) => (
               <div className="flex flex-row space-x-8 pt-4" key={index}>
                 <Typography
@@ -141,38 +132,38 @@ const ShowAttempt = () => {
                   <Typography className="flex pb-2" style="body2" weight="bold">
                     {question.name}
                   </Typography>
-                  {question.options.map((option, index) => (
-                    <div className="flex flex-row space-x-2 pt-1" key={index}>
-                      <input
-                        type="radio"
-                        className="flex"
-                        checked={
-                          answers[question.id].options[option.id].selected
-                        }
-                        onClick={() => {
-                          if (!submitted) {
-                            setAnswers(old => {
-                              Object.keys(old[question.id].options).forEach(
-                                key =>
-                                  (old[question.id].options[
-                                    key
-                                  ].selected = false)
-                              );
-                              old[question.id].options[option.id].selected =
-                                !old[question.id].options[option.id].selected;
-                              return { ...old };
-                            });
+                  {question.options.map((option, index) => {
+                    const optionOnClick = () => {
+                      if (!submitted) {
+                        Object.keys(answers[question.id].options).forEach(
+                          key =>
+                            (answers[question.id].options[key].selected = false)
+                        );
+                        answers[question.id].options[option.id].selected =
+                          !answers[question.id].options[option.id].selected;
+                        setAnswers({ ...answers });
+                      }
+                    };
+
+                    return (
+                      <div className="flex flex-row space-x-2 pt-1" key={index}>
+                        <input
+                          type="radio"
+                          className="flex"
+                          checked={
+                            answers[question.id].options[option.id].selected
                           }
-                        }}
-                      />
-                      <label>{option.name}</label>
-                      {answers[question.id].options[option.id].correct ? (
-                        <div className="flex text-green-500">Correct</div>
-                      ) : (
-                        <></>
-                      )}
-                    </div>
-                  ))}
+                          onClick={optionOnClick}
+                        />
+                        <label>{option.name}</label>
+                        {answers[question.id].options[option.id].correct ? (
+                          <div className="flex text-green-500">Correct</div>
+                        ) : (
+                          <></>
+                        )}
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
             ))}
