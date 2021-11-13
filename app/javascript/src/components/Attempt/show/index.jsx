@@ -47,7 +47,7 @@ const ShowAttempt = () => {
     setSubmitted(true);
   };
 
-  useEffect(async () => {
+  const fetchAttempt = async () => {
     try {
       const response = await attemptsApi.show(attempts.id);
       if (response.data.attempt.submitted) {
@@ -67,7 +67,9 @@ const ShowAttempt = () => {
       handleError(error);
     }
     setLoading(false);
-  }, []);
+  };
+
+  useEffect(fetchAttempt, []);
 
   const showResultText = `Thank you for taking the quiz, here are your results. You
           have submitted ${correctCount} correct and
