@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 
+import { Check, Close } from "neetoicons";
 import { Button, Typography } from "neetoui";
 
 import attemptsApi from "apis/attempts";
@@ -20,7 +21,7 @@ const createInitialAnswers = questions => {
 };
 
 const ShowAttempt = () => {
-  const [attempts] = useAttempts();
+  const [attempts, setAttempts] = useAttempts();
 
   const [answers, setAnswers] = useState(
     createInitialAnswers(attempts.questions)
@@ -61,6 +62,17 @@ const ShowAttempt = () => {
           ].selected = true;
         }
       });
+
+      if (submitted) {
+        attempts.questions = attempts.questions.filter(
+          question =>
+            response.data.attempt_answers.findIndex(
+              attempt_answer => attempt_answer.question_id === question.id
+            ) !== -1
+        );
+        setAttempts({ ...attempts });
+      }
+
       setAnswers({ ...answers });
       logger.info(response);
     } catch (error) {
@@ -109,7 +121,7 @@ const ShowAttempt = () => {
   };
 
   return (
-    <div className="flex flex-col justify-between mx-8">
+    <div className="flex flex-col justify-between mx-20 mt-4">
       <Typography
         className="flex py-4 text-gray-600"
         style="h2"
@@ -119,10 +131,21 @@ const ShowAttempt = () => {
       </Typography>
       {!loading ? (
         <div className="flex flex-col">
-          {submitted ? <Typography>{showResultText}</Typography> : <></>}
+          {submitted ? (
+            <div className="flex flex-row">
+              <Typography className="bg-gray-100 p-2 rounded-md">
+                {showResultText}
+              </Typography>
+            </div>
+          ) : (
+            <></>
+          )}
           <form onSubmit={handleAttempSubmit}>
             {attempts.questions.map((question, index) => (
-              <div className="flex flex-row space-x-8 pt-4" key={index}>
+              <div
+                className="flex flex-row space-x-8 pt-8 pl-2 pb-4"
+                key={index}
+              >
                 <Typography
                   className="flex text-gray-600"
                   style="body2"
@@ -130,8 +153,12 @@ const ShowAttempt = () => {
                 >
                   {`Question ${index + 1}`}
                 </Typography>
-                <div className="flex flex-col">
-                  <Typography className="flex pb-2" style="body2" weight="bold">
+                <div className="flex flex-col w-2/3">
+                  <Typography
+                    className="flex p-2 bg-gray-100 rounded-t-lg"
+                    style="body2"
+                    weight="bold"
+                  >
                     {question.name}
                   </Typography>
                   {question.options.map((option, index) => {
@@ -147,8 +174,26 @@ const ShowAttempt = () => {
                       }
                     };
 
+                    const correctAnswerColor = answers[question.id].options[
+                      option.id
+                    ].correct
+                      ? "bg-green-100"
+                      : "";
+
+                    const wrongAnswerCondtion =
+                      submitted &&
+                      answers[question.id].options[option.id].selected &&
+                      !answers[question.id].options[option.id].correct;
+
+                    const wrongAnswerColor = wrongAnswerCondtion
+                      ? "bg-red-100"
+                      : "";
+
                     return (
-                      <div className="flex flex-row space-x-2 pt-1" key={index}>
+                      <div
+                        className={`flex flex-row space-x-2 p-2 border-gray-100 border-l-2 border-r-2 border-b-2 ${correctAnswerColor} ${wrongAnswerColor}`}
+                        key={index}
+                      >
                         <input
                           type="radio"
                           className="flex"
@@ -157,12 +202,13 @@ const ShowAttempt = () => {
                           }
                           onClick={optionOnClick}
                         />
-                        <label>{option.name}</label>
+                        <label className="flex flex-grow">{option.name}</label>
                         {answers[question.id].options[option.id].correct ? (
-                          <div className="flex text-green-500">Correct</div>
+                          <Check size={16} />
                         ) : (
                           <></>
                         )}
+                        {wrongAnswerCondtion ? <Close size={16} /> : <></>}
                       </div>
                     );
                   })}
@@ -171,7 +217,8 @@ const ShowAttempt = () => {
             ))}
             {!submitted ? (
               <Button
-                className="flex mt-8 ml-24"
+                className="flex mt-8 ml-32"
+                size="large"
                 type="submit"
                 label="Submit"
               />
