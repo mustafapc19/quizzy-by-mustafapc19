@@ -3,14 +3,9 @@
 class Public::AttemptsController < ApplicationController
   before_action :authenticate_user_using_x_auth_token, except: :index
   before_action :load_attempt, only: [:create, :update]
+  before_action :load_quiz_by_slug, only: [:index]
 
   def index
-    unless params[:slug]
-      return
-    end
-
-    @quiz = Quiz.find_by(slug: params[:slug])
-
     unless @quiz
       return
     end
@@ -73,5 +68,9 @@ class Public::AttemptsController < ApplicationController
 
     def load_attempt
       @attempt = @current_user.attempts.find_by(quiz_id: attempt_param[:quiz_id])
+    end
+
+    def load_quiz_by_slug
+      @quiz = Quiz.find_by(slug: params[:slug])
     end
 end
