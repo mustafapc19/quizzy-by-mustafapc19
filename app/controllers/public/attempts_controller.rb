@@ -2,6 +2,7 @@
 
 class Public::AttemptsController < ApplicationController
   before_action :authenticate_user_using_x_auth_token, except: :index
+  before_action :load_attempt, only: [:create, :update]
 
   def index
     unless params[:slug]
@@ -26,8 +27,6 @@ class Public::AttemptsController < ApplicationController
   end
 
   def create
-    @attempt = @current_user.attempts.find_by(quiz_id: attempt_param[:quiz_id])
-
     unless @attempt
       @attempt = @current_user.attempts.new(quiz_id: attempt_param[:quiz_id])
       unless @attempt.save
@@ -38,7 +37,7 @@ class Public::AttemptsController < ApplicationController
   end
 
   def show
-    @attempt = Attempt.find_by(id: params[:id])
+    @attempt = @current_user.attempts.find_by(id: params[:id])
     unless @attempt
       render status: :not_found, json: { error: t("attempt.not_found") }
     end
@@ -47,8 +46,6 @@ class Public::AttemptsController < ApplicationController
   end
 
   def update
-    @attempt = @current_user.attempts.find_by(quiz_id: attempt_param[:quiz_id])
-
     if @attempt
       if @attempt.submitted
         render status: :unprocessable_entity,
@@ -72,5 +69,9 @@ class Public::AttemptsController < ApplicationController
       params.require(:attempt_attributes).permit(
         :quiz_id,
         attempt_answers_attributes: [[:question_id, :option_id]])
+    end
+
+    def load_attempt
+      @attempt = @current_user.attempts.find_by(quiz_id: attempt_param[:quiz_id])
     end
 end
