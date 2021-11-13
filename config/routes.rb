@@ -3,7 +3,7 @@
 Rails.application.routes.draw do
   defaults format: :json do
     resource :sessions, only: %i[create destroy]
-    resource :users
+    resource :users, only: %i[create]
     resources :quizzes do
       resources :questions
     end
