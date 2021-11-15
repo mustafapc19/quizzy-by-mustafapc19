@@ -16,6 +16,7 @@ import EditQuestion from "components/Questions/edit";
 import ShowQuestions from "components/Questions/show";
 import CreateQuiz from "components/Quiz/create";
 import ShowQuiz from "components/Quiz/show";
+import Reports from "components/Reports";
 import { QuizzesProvider } from "contexts/quizzes";
 import {
   clearAuthFromLocalStorage,
@@ -34,7 +35,7 @@ const App = () => {
 
   useEffect(() => {
     initializeLogger();
-    setAuthHeaders(setLoading, setUserData);
+    setAuthHeaders(setLoading);
     if (isLoggedIn) {
       setUserData(getUserDataFromLocalStorage());
     }
@@ -68,6 +69,12 @@ const App = () => {
           <Router>
             <Switch>
               <Route exact path="/login" component={Login} />
+              <PrivateRoute
+                path="/reports"
+                redirectRoute="/login"
+                condition={!isLoggedIn}
+                component={Reports}
+              />
               <PrivateRoute
                 path="/quiz/show"
                 redirectRoute="/login"

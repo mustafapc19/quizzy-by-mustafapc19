@@ -11,6 +11,7 @@ Rails.application.routes.draw do
 
   namespace :public do
     resources :attempts, except: %i[destroy]
+    resources :reports, only: %i[index]
   end
   get "/public/:slug", to: "public/attempts#index"
   get "/public/:slug/register", to: "public/attempts#index"

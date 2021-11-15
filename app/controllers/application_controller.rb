@@ -20,7 +20,15 @@ class ApplicationController < ActionController::Base
         error: t("session.could_not_auth")
       }
     end
-end
+  end
+
+  def reject_if_not_administrator
+    unless @current_user.administrator?
+      render status: :unauthorized, json: {
+        error: t("session.underprivileged")
+      }
+    end
+  end
 
   private
 
