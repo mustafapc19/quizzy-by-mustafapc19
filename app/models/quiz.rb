@@ -3,6 +3,8 @@
 class Quiz < ApplicationRecord
   belongs_to :user
   has_many :questions, dependent: :destroy
+  has_many :attempts, dependent: :destroy
+
   accepts_nested_attributes_for :questions
 
   validates :slug, uniqueness: true, if: -> { slug.present? }

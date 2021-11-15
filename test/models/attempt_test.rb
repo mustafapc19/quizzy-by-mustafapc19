@@ -34,4 +34,32 @@ class AttemptTest < ActiveSupport::TestCase
 
     assert @attempt.submitted
   end
+
+  def test_correct_answer_count_set_after_save
+    @question = @quiz.questions.new(name: "question")
+    @option = @question.options.new(name: "option", correct: true)
+    @wrong_option = @question.options.new(name: "option")
+    @quiz.save
+
+    @attempt.attempt_answers.new(
+      question_id: @question.id,
+      option_id: @option.id)
+    @attempt.save
+
+    assert @attempt.correct_answers_count == 1
+  end
+
+  def test_incorrect_answer_count_set_after_save
+    @question = @quiz.questions.new(name: "question")
+    @option = @question.options.new(name: "option", correct: true)
+    @wrong_option = @question.options.new(name: "option")
+    @quiz.save
+
+    @attempt.attempt_answers.new(
+      question_id: @question.id,
+      option_id: @wrong_option.id)
+    @attempt.save
+
+    assert @attempt.incorrect_answers_count == 1
+  end
 end
