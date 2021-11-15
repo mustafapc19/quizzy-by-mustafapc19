@@ -13,7 +13,11 @@ const ListQuizzes = ({ quizzes }) => {
   const [showConfirmDeleteModal, setShowConfirmDeleteModal] = useState(false);
   const [onFocusQuiz, setOnFocusQuiz] = useState({});
 
-  const data = React.useMemo(() => Object.keys(quizzes), [quizzes]);
+  const data = React.useMemo(
+    () =>
+      Object.keys(quizzes).sort((a, b) => quizzes[b].time - quizzes[a].time),
+    [quizzes]
+  );
 
   const columns = React.useMemo(
     () => [
@@ -22,11 +26,13 @@ const ListQuizzes = ({ quizzes }) => {
         Cell: ({ row }) => (
           <Link
             to={{
-              pathname: "show_quiz",
+              pathname: "/quiz/show",
               state: { quiz: quizzes[row.original] },
             }}
           >
-            {quizzes[row.original].name}
+            <Typography className="hover:text-blue-600">
+              {quizzes[row.original].name}
+            </Typography>
           </Link>
         ),
       },
@@ -78,7 +84,11 @@ const ListQuizzes = ({ quizzes }) => {
       />
       <table className="w-full" {...getTableProps()}>
         <thead className="py-4 border-b-2">
-          <Typography style="body2" weight="semibold">
+          <Typography
+            className="pb-2 pl-2 text-gray-700"
+            style="body2"
+            weight="semibold"
+          >
             Quiz Name
           </Typography>
         </thead>
@@ -88,7 +98,7 @@ const ListQuizzes = ({ quizzes }) => {
             return (
               <tr
                 key={index}
-                className="flex border-b-2"
+                className="flex py-2 border-b-2"
                 {...row.getRowProps()}
               >
                 {row.cells.map((cell, index) => {

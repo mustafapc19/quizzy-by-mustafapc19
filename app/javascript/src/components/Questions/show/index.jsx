@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 
+import { Check } from "neetoicons";
 import { Button, Typography } from "neetoui";
 import { Link, useLocation } from "react-router-dom";
 
@@ -10,35 +11,55 @@ import ConfirmDelete from "./ConfirmDelete";
 
 const ShowQuestions = () => {
   const [quiz, setQuiz] = useState(useLocation().state.quiz);
-  const [questions, setQuestions] = useState({});
+  const [questions, setQuestions] = useState([]);
   const [showConfirmDeleteModal, setShowConfirmDeleteModal] = useState(false);
   const [onFocusQuestion, setOnFocusQuestion] = useState({});
 
   useEffect(async () => {
     const response = await questionsApi.list({ quiz_id: quiz.id });
     logger.info(response);
-    response.data.forEach(item => {
-      questions[item.question.id] = { options: item.options, ...item.question };
+    response.data.questions.forEach(item => {
+      const date = new Date(item.question.created_at);
+      const time = date.getTime();
+      questions.push({
+        id: item.question.id,
+        options: item.options,
+        time,
+        ...item.question,
+      });
     });
 
-    setQuestions({ ...questions });
+    questions.sort((a, b) => b.time - a.time);
+    setQuestions([...questions]);
   }, []);
 
+  const handlePublish = async () => {
+    const response = await quizzesApi.update(quiz.id, {
+      quiz: {
+        publish: true,
+      },
+    });
+    logger.info(response.data);
+    quiz.slug = response.data.slug;
+    setQuiz({ ...quiz });
+  };
+
   return (
-    <>
+    <div className="px-8">
       <div className="flex flex-row justify-between">
         <Typography
-          className="flex"
+          className="flex pb-2 py-2 px-2"
           style="h2"
           weight="medium"
         >{`${quiz.name} quiz`}</Typography>
         <div className="space-x-2">
           <Button
             className="flex"
+            size="large"
             label={
               <Link
                 to={{
-                  pathname: "create_question",
+                  pathname: "/quiz/question/create",
                   state: { quiz: quiz },
                 }}
               >
@@ -46,31 +67,18 @@ const ShowQuestions = () => {
               </Link>
             }
           />
-          {Object.keys(questions).length !== 0 && !(quiz.slug?.length > 0) ? (
-            <Button
-              className="flex"
-              label="Publish"
-              onClick={async () => {
-                const response = await quizzesApi.update(quiz.id, {
-                  quiz: {
-                    publish: true,
-                  },
-                });
-                logger.info(response.data);
-                quiz.slug = response.data.slug;
-                setQuiz({ ...quiz });
-              }}
-            />
+          {questions.length !== 0 && !(quiz.slug?.length > 0) ? (
+            <Button className="flex" label="Publish" onClick={handlePublish} />
           ) : (
             <></>
           )}
         </div>
       </div>
       {quiz.slug?.length > 0 ? (
-        <div>
-          Published your public link is{" "}
+        <div className="py-2 px-2">
+          Published link:
           <a
-            className="text-blue-700"
+            className="text-blue-700 pl-1"
             href={`${window.location.origin}/public/${quiz.slug}`}
           >
             {`${window.location.origin}/public/${quiz.slug}`}
@@ -79,56 +87,85 @@ const ShowQuestions = () => {
       ) : (
         <></>
       )}
-      {Object.keys(questions).length === 0 ? (
+      {questions.length === 0 ? (
         <div className="flex flex-row justify-center">
           <Typography className="mt-20">
             There are no questions in this quiz.
           </Typography>
         </div>
       ) : (
-        Object.keys(questions).map((key, index) => (
-          <div key={index} className="pb-8 pt-2">
-            <div className="flex flex-row space-x-16 pt-2">
-              <Typography style="body2">{`Question ${index + 1}`}</Typography>
-              <Typography style="h4">{questions[key].name}</Typography>
-              <Button
-                className="flex"
-                style="secondary"
-                label={
-                  <Link
-                    to={{
-                      pathname: "edit_question",
-                      state: { quiz: quiz, question: questions[key] },
-                    }}
-                  >
-                    Edit
-                  </Link>
-                }
-              />
-              <Button
-                style="danger"
-                label="Delete"
-                onClick={() => {
-                  setOnFocusQuestion(questions[key]);
-                  setShowConfirmDeleteModal(true);
-                }}
-              ></Button>
-            </div>
-            <div className="flex flex-col  pt-2">
-              {questions[key].options.map((option, index) => (
-                <div key={index} className="flex flex-row space-x-20">
-                  <Typography style="body2">{`Option ${index + 1}`}</Typography>
-                  <Typography style="h5">{option.name}</Typography>
-                  {option.correct ? (
-                    <div className="text-green-400">Correct</div>
-                  ) : (
-                    <></>
-                  )}
+        questions.map((question, index) => {
+          const onDelete = () => {
+            setOnFocusQuestion(question);
+            setShowConfirmDeleteModal(true);
+          };
+
+          const questionLabel = `Question ${index + 1}`;
+          return (
+            <div key={index} className="pb-8 pt-2">
+              <div className="flex flex-row space-x-16 pt-2 bg-gray-100 w-2/3 px-2 rounded-t-lg">
+                <Typography className="flex" style="body2">
+                  {questionLabel}
+                </Typography>
+                <Typography className="flex-grow" style="h4">
+                  {question.name}
+                </Typography>
+                <div className="flex space-x-4">
+                  <Button
+                    className="mb-2"
+                    style="secondary"
+                    label={
+                      <Link
+                        to={{
+                          pathname: "/quiz/question/edit",
+                          state: { quiz: quiz, question: question },
+                        }}
+                      >
+                        Edit
+                      </Link>
+                    }
+                  />
+                  <Button
+                    style="danger"
+                    className="flex mb-2"
+                    label="Delete"
+                    onClick={onDelete}
+                  ></Button>
                 </div>
-              ))}
+              </div>
+              <div className="flex flex-col w-2/3">
+                {question.options.map((option, index) => {
+                  const optionLabel = `Option ${index + 1}`;
+                  const correctOptionColor = option.correct
+                    ? "bg-green-100"
+                    : "";
+                  return (
+                    <div
+                      key={index}
+                      className={`flex flex-row space-x-20 py-1 border-gray-100  border-b-2 ${correctOptionColor}`}
+                    >
+                      <Typography className="flex pl-2" style="body2">
+                        {optionLabel}
+                      </Typography>
+                      <Typography className="flex flex-grow" style="h5">
+                        <div className="flex flex-row">
+                          <div className="flex flex-grow">{option.name}</div>
+                          {option.correct ? (
+                            <div className="flex pl-2">
+                              <Check size={16} />
+                            </div>
+                          ) : (
+                            <></>
+                          )}
+                        </div>
+                      </Typography>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
-          </div>
-        ))
+          );
+        })
       )}
       <ConfirmDelete
         quiz={quiz}
@@ -137,7 +174,7 @@ const ShowQuestions = () => {
         setQuestions={setQuestions}
         setShowConfirmDeleteModal={setShowConfirmDeleteModal}
       />
-    </>
+    </div>
   );
 };
 

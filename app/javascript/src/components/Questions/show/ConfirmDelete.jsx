@@ -4,6 +4,7 @@ import { Button, Modal, Toastr, Typography } from "neetoui";
 import PropTypes from "prop-types";
 
 import questionsApi from "apis/questions";
+import handleError from "common/error";
 
 const ConfirmDelete = ({
   quiz,
@@ -12,13 +13,31 @@ const ConfirmDelete = ({
   setShowConfirmDeleteModal,
   setQuestions,
 }) => {
+  const handleDelete = async () => {
+    try {
+      await questionsApi.destroy({
+        question_id: question.id,
+        quiz_id: quiz.id,
+      });
+
+      Toastr.success("Question deleted successfuly");
+      setQuestions(old => [...old.filter(item => item.id !== question.id)]);
+      setShowConfirmDeleteModal(false);
+    } catch (error) {
+      handleError(error);
+    }
+  };
+
+  const closeModal = () => {
+    setShowConfirmDeleteModal(false);
+  };
+
   return (
     <div className="w-full">
       <Modal
         className="p-4 space-y-2"
         size="xs"
         isOpen={showConfirmDeleteModal}
-        onClose={() => setShowConfirmDeleteModal(false)}
         closeButton={false}
       >
         <Typography>Are you sure?</Typography>
@@ -26,32 +45,9 @@ const ConfirmDelete = ({
           className="mr-2"
           label="Yes"
           style="danger"
-          onClick={async () => {
-            try {
-              await questionsApi.destroy({
-                question_id: question.id,
-                quiz_id: quiz.id,
-              });
-
-              Toastr.success("Question deleted successfuly");
-              setQuestions(old => {
-                delete old[question.id];
-                return { ...old };
-              });
-              setShowConfirmDeleteModal(false);
-            } catch (error) {
-              logger.error(error?.response?.data?.error);
-              Toastr.error(
-                error?.response?.data?.error || "Something went wrong"
-              );
-            }
-          }}
+          onClick={handleDelete}
         />
-        <Button
-          label="Cancel"
-          style="text"
-          onClick={() => setShowConfirmDeleteModal(false)}
-        />
+        <Button label="Cancel" style="text" onClick={closeModal} />
       </Modal>
     </div>
   );

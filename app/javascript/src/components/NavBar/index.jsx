@@ -10,22 +10,25 @@ const NavBar = ({ userData, isLoggedIn, handleLogout }) => {
       <Header
         className="border-b-2"
         actionBlock={
-          <>
+          <div className="flex flex-row pr-8">
             {"firstName" in userData && "lastName" in userData ? (
-              <div> {`${userData.firstName} ${userData.lastName}`} </div>
+              <Typography className="flex py-1 pr-2">
+                {`${userData.firstName} ${userData.lastName}`}
+              </Typography>
             ) : (
               <></>
             )}
             {isLoggedIn ? (
               <Button
+                className="flex"
                 style="text"
                 label="Logout"
-                onClick={() => handleLogout()}
+                onClick={handleLogout}
               />
             ) : (
               <></>
             )}
-          </>
+          </div>
         }
         title={
           <Typography className="pl-8" style="h1">

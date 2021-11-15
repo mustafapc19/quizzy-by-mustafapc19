@@ -2,6 +2,6 @@
 
 class AttemptAnswer < ApplicationRecord
   belongs_to :attempt
-  belongs_to :quiz_question
-  belongs_to :quiz_option, optional: true
+  belongs_to :question
+  belongs_to :option, optional: true
 end

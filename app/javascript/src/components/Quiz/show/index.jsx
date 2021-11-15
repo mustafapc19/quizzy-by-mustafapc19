@@ -14,20 +14,29 @@ const ShowQuiz = () => {
     try {
       const response = await quizzesApi.list();
       let quizzes = {};
-      response.data.quizzes.forEach(quiz => (quizzes[quiz.id] = quiz));
+      response.data.quizzes.forEach(quiz => {
+        const date = new Date(quiz.created_at);
+        quiz.time = date.getTime();
+        quizzes[quiz.id] = quiz;
+      });
       setQuizzes(quizzes);
     } catch (error) {
       logger.error(error);
     }
   }, []);
 
+  const handleNewQuiz = () => {
+    window.location.href = "/quiz/create";
+  };
+
   return (
-    <div className="space-y-2">
+    <div className="mx-10 space-y-2">
       <div className="flex flex-row justify-end">
         <Button
           className="flex"
+          size="large"
           label="Add new quiz"
-          onClick={() => (window.location.href = "/create_quiz")}
+          onClick={handleNewQuiz}
         ></Button>
       </div>
       {Object.keys(quizzes).length === 0 ? (

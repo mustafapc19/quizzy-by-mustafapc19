@@ -9,31 +9,37 @@ class QuizPolicy
   end
 
   def index?
-    quiz.user_id == user.id
+    check_user_id_and_is_administrator?
   end
 
   def create?
-    quiz.user_id == user.id
+    check_user_id_and_is_administrator?
   end
 
   def update?
-    quiz.user_id == user.id
+    check_user_id_and_is_administrator?
   end
 
   def destroy?
-    quiz.user_id == user.id
+    check_user_id_and_is_administrator?
   end
 
-  class Scope
-    attr_reader :user, :scope
+  private
 
-    def initialize(user, scope)
-      @user = user
-      @scope = scope
+    def check_user_id_and_is_administrator?
+      quiz.user_id == user.id && user.administrator?
     end
 
-    def resolve
-      scope.where(user_id: user.id)
+    class Scope
+      attr_reader :user, :scope
+
+      def initialize(user, scope)
+        @user = user
+        @scope = scope
+      end
+
+      def resolve
+        scope.where(user_id: user.id)
+      end
     end
-  end
 end

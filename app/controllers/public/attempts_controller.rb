@@ -2,32 +2,26 @@
 
 class Public::AttemptsController < ApplicationController
   before_action :authenticate_user_using_x_auth_token, except: :index
+  before_action :load_attempt, only: [:create, :update]
+  before_action :load_quiz_by_slug, only: [:index]
 
   def index
-    unless params[:slug]
-      return
-    end
-
-    @quiz = Quiz.find_by(slug: params[:slug])
-
     unless @quiz
       return
     end
 
-    @questions = @quiz.quiz_questions.map do |question|
+    @questions = @quiz.questions.map do |question|
       {
         "id" => question.id,
         "name" => question.name,
         "created_at" => question.created_at,
-        "options" => question.quiz_options.map {
+        "options" => question.options.map {
           |option| { id: option.id, name: option.name } }
       }
     end
   end
 
   def create
-    @attempt = @current_user.attempts.find_by(quiz_id: attempt_param[:quiz_id])
-
     unless @attempt
       @attempt = @current_user.attempts.new(quiz_id: attempt_param[:quiz_id])
       unless @attempt.save
@@ -38,7 +32,7 @@ class Public::AttemptsController < ApplicationController
   end
 
   def show
-    @attempt = Attempt.find_by(id: params[:id])
+    @attempt = @current_user.attempts.find_by(id: params[:id])
     unless @attempt
       render status: :not_found, json: { error: t("attempt.not_found") }
     end
@@ -47,8 +41,6 @@ class Public::AttemptsController < ApplicationController
   end
 
   def update
-    @attempt = @current_user.attempts.find_by(quiz_id: attempt_param[:quiz_id])
-
     if @attempt
       if @attempt.submitted
         render status: :unprocessable_entity,
@@ -71,6 +63,14 @@ class Public::AttemptsController < ApplicationController
     def attempt_param
       params.require(:attempt_attributes).permit(
         :quiz_id,
-        attempt_answers_attributes: [[:quiz_question_id, :quiz_option_id]])
+        attempt_answers_attributes: [[:question_id, :option_id]])
+    end
+
+    def load_attempt
+      @attempt = @current_user.attempts.find_by(quiz_id: attempt_param[:quiz_id])
+    end
+
+    def load_quiz_by_slug
+      @quiz = Quiz.find_by(slug: params[:slug])
     end
 end

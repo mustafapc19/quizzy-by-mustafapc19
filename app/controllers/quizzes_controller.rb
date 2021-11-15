@@ -27,9 +27,12 @@ class QuizzesController < ApplicationController
 
     if quiz_params[:publish]
       @quiz.set_slug
+      @quiz.save
+    else
+      @quiz.update(quiz_params)
     end
 
-    unless quiz_params[:publish] ? @quiz.save : @quiz.update(quiz_params)
+    unless @quiz.errors
       render status: :unprocessable_entity,
         json: { error: @quiz.errors.full_messages.to_sentence }
     end

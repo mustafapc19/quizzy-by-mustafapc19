@@ -1,45 +1,52 @@
 import React from "react";
 
-import { Button, Input } from "neetoui";
+import { Form, Formik } from "formik";
+import { Button } from "neetoui";
+import { Input } from "neetoui/formik";
 import PropTypes from "prop-types";
 
-const LoginForm = ({ handleSubmit, setEmail, setPassword }) => {
+import { FORM_INITIAL_VALUES, FORM_VALIDATION_SCHEMA } from "./constants";
+
+const LoginForm = ({ handleSubmit }) => {
   return (
-    <div
-      className="flex items-center justify-center
-      px-4 py-12 lg:px-8 bg-gray-50 sm:px-6"
-    >
-      <div className="w-full max-w-md">
-        <h2
-          className="mt-6 text-3xl font-extrabold leading-9
-          text-center text-bb-gray-700"
-        >
-          Login
-        </h2>
-        <form className="mt-8 space-y-4" onSubmit={handleSubmit}>
-          <Input
-            label="Email"
-            type="email"
-            placeholder="oliver@example.com"
-            onChange={e => setEmail(e.target.value)}
-          />
-          <Input
-            label="Password"
-            type="password"
-            placeholder="********"
-            onChange={e => setPassword(e.target.value)}
-          />
-          <Button type="submit" label="Submit" />
-        </form>
-      </div>
+    <div>
+      <Formik
+        initialValues={FORM_INITIAL_VALUES}
+        onSubmit={handleSubmit}
+        validationSchema={FORM_VALIDATION_SCHEMA}
+      >
+        {({ isSubmitting }) => (
+          <Form className="w-1/4 space-y-4">
+            <Input
+              label="Email Address*"
+              type="email"
+              name="email"
+              placeholder="Enter your email address"
+            />
+            <Input
+              label="Password*"
+              type="password"
+              name="password"
+              placeholder="Enter your password"
+            />
+            <Button
+              type="submit"
+              label="Login"
+              size="large"
+              style="primary"
+              className="mr-2"
+              disabled={isSubmitting}
+              loading={isSubmitting}
+            />
+          </Form>
+        )}
+      </Formik>
     </div>
   );
 };
 
 LoginForm.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
-  setEmail: PropTypes.func.isRequired,
-  setPassword: PropTypes.func.isRequired,
 };
 
 export default LoginForm;

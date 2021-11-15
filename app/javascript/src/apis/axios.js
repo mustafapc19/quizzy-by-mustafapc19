@@ -4,7 +4,7 @@ import { getFromLocalStorage } from "helpers/storage";
 
 axios.defaults.baseURL = "/";
 
-export const setAuthHeaders = (setLoading = () => null) => {
+const setAuthHeaders = (setLoading = () => null) => {
   axios.defaults.headers = {
     Accept: "application/json",
     "Content-Type": "application/json",
@@ -20,3 +20,10 @@ export const setAuthHeaders = (setLoading = () => null) => {
   }
   setLoading(false);
 };
+
+const resetAuthTokens = () => {
+  delete axios.defaults.headers["X-Auth-Email"];
+  delete axios.defaults.headers["X-Auth-Token"];
+};
+
+export { setAuthHeaders, resetAuthTokens };

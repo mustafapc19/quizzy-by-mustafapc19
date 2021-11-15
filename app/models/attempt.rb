@@ -12,7 +12,7 @@ class Attempt < ApplicationRecord
   private
 
     def submit_if_answers
-      unless self.attempt_answers.empty?
+      if self.attempt_answers.present?
         self.submitted = true
       end
     end
