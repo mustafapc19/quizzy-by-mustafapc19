@@ -68,7 +68,12 @@ const ShowQuestions = () => {
             }
           />
           {questions.length !== 0 && !(quiz.slug?.length > 0) ? (
-            <Button className="flex" label="Publish" onClick={handlePublish} />
+            <Button
+              className="flex"
+              size="large"
+              label="Publish"
+              onClick={handlePublish}
+            />
           ) : (
             <></>
           )}

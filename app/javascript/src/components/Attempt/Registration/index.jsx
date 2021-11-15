@@ -40,6 +40,7 @@ const Registration = () => {
       setToLocalStorage({
         authToken: response.data.authentication_token,
         email: values.email,
+        role: response.data.role,
       });
       setAuthHeaders();
 
