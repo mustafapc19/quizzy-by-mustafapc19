@@ -5,7 +5,7 @@ import { Button, Typography } from "neetoui";
 
 import attemptsApi from "apis/attempts";
 import handleError from "common/error";
-import { useAttempts } from "contexts/attempts";
+import { useAttempt } from "contexts/attempt";
 
 const createInitialAnswers = questions => {
   const answers = {};
@@ -21,10 +21,10 @@ const createInitialAnswers = questions => {
 };
 
 const ShowAttempt = () => {
-  const [attempts, setAttempts] = useAttempts();
+  const [attempt, setAttempt] = useAttempt();
 
   const [answers, setAnswers] = useState(
-    createInitialAnswers(attempts.questions)
+    createInitialAnswers(attempt.questions)
   );
   const [correctCount, setCorrectCount] = useState(0);
   const [submitted, setSubmitted] = useState(false);
@@ -50,7 +50,7 @@ const ShowAttempt = () => {
 
   const fetchAttempt = async () => {
     try {
-      const response = await attemptsApi.show(attempts.id);
+      const response = await attemptsApi.show(attempt.id);
       if (response.data.attempt.submitted) {
         setSubmittedOptions(response.data.results);
       }
@@ -64,13 +64,13 @@ const ShowAttempt = () => {
       });
 
       if (submitted) {
-        attempts.questions = attempts.questions.filter(
+        attempt.questions = attempt.questions.filter(
           question =>
             response.data.attempt_answers.findIndex(
               attempt_answer => attempt_answer.question_id === question.id
             ) !== -1
         );
-        setAttempts({ ...attempts });
+        setAttempt({ ...attempt });
       }
 
       setAnswers({ ...answers });
@@ -95,8 +95,8 @@ const ShowAttempt = () => {
         id: 0,
         payload: {
           attempt_attributes: {
-            quiz_id: attempts.quiz.id,
-            attempt_answers_attributes: attempts.questions.map(question => {
+            quiz_id: attempt.quiz.id,
+            attempt_answers_attributes: attempt.questions.map(question => {
               let selected_option;
 
               Object.keys(answers[question.id].options).forEach(optionKey => {
@@ -127,7 +127,7 @@ const ShowAttempt = () => {
         style="h2"
         weight="medium"
       >
-        {attempts.quiz.name}
+        {attempt.quiz.name}
       </Typography>
       {!loading ? (
         <div className="flex flex-col">
@@ -141,7 +141,7 @@ const ShowAttempt = () => {
             <></>
           )}
           <form onSubmit={handleAttempSubmit}>
-            {attempts.questions.map((question, index) => (
+            {attempt.questions.map((question, index) => (
               <div
                 className="flex flex-row space-x-8 pt-8 pl-2 pb-4"
                 key={index}

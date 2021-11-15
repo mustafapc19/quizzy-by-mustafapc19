@@ -8,13 +8,13 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { setAuthHeaders } from "apis/axios";
 import { initializeLogger } from "common/logger";
 import PrivateRoute from "components/Common/PrivateRoute";
+import { AttemptProvider } from "contexts/attempt";
+import { getFromLocalStorage } from "helpers/storage";
 
 import { urlRoot } from "./constants";
 import Registration from "./Registration";
 import ShowAttempt from "./show";
 
-import { AttemptsProvider } from "../../contexts/attempts";
-import { getFromLocalStorage } from "../../helpers/storage";
 import NavBar from "../NavBar";
 
 const Attempt = ({ quiz, questions }) => {
@@ -33,7 +33,7 @@ const Attempt = ({ quiz, questions }) => {
   }, []);
 
   return (
-    <AttemptsProvider
+    <AttemptProvider
       quiz={quiz}
       questions={questions}
       attemptId={getFromLocalStorage("attemptId")}
@@ -65,7 +65,7 @@ const Attempt = ({ quiz, questions }) => {
           </Typography>
         </div>
       )}
-    </AttemptsProvider>
+    </AttemptProvider>
   );
 };
 
