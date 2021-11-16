@@ -17,6 +17,8 @@ import ShowQuestions from "components/Questions/show";
 import CreateQuiz from "components/Quiz/create";
 import ShowQuiz from "components/Quiz/show";
 import Reports from "components/Reports";
+import ExportDownload from "components/Reports/ExportDownload";
+import ExportProcessing from "components/Reports/ExportProcessing";
 import { QuizzesProvider } from "contexts/quizzes";
 import {
   clearAuthFromLocalStorage,
@@ -69,6 +71,18 @@ const App = () => {
           <Router>
             <Switch>
               <Route exact path="/login" component={Login} />
+              <PrivateRoute
+                path="/reports/download/:exportId"
+                redirectRoute="/reports"
+                condition={!isLoggedIn}
+                component={ExportDownload}
+              />
+              <PrivateRoute
+                path="/reports/export/:exportId"
+                redirectRoute="/reports"
+                condition={!isLoggedIn}
+                component={ExportProcessing}
+              />
               <PrivateRoute
                 path="/reports"
                 redirectRoute="/login"

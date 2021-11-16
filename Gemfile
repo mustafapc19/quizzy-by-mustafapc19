@@ -32,6 +32,15 @@ gem "bootsnap", ">= 1.4.4", require: false
 # For Model Authorization
 gem "pundit"
 
+# For generating spreadsheet files
+gem "spreadsheet"
+
+# For creating background workers
+gem "sidekiq"
+
+# For knowing status of a sidekiq worker
+gem "sidekiq-status"
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem "byebug", platforms: [:mri, :mingw, :x64_mingw]

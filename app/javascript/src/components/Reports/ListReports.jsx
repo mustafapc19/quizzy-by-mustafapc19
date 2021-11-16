@@ -19,31 +19,27 @@ const ListReports = ({ reports }) => {
       accessor: "userName",
       Cell: ({ row }) => (
         <Typography>
-          {row.original.attempt_user_first_name +
-            " " +
-            row.original.attempt_user_last_name}
+          {row.original.first_name + " " + row.original.last_name}
         </Typography>
       ),
     },
     {
       Header: "Email",
       accessor: "userEmail",
-      Cell: ({ row }) => (
-        <Typography>{row.original.attempt_user_email}</Typography>
-      ),
+      Cell: ({ row }) => <Typography>{row.original.email}</Typography>,
     },
     {
       Header: "Correct Answers",
       accessor: "correctAnswersCount",
       Cell: ({ row }) => (
-        <Typography>{row.original.attempt_correct_answers_count}</Typography>
+        <Typography>{row.original.correct_answers_count}</Typography>
       ),
     },
     {
       Header: "Incorrect Answers",
       accessor: "inCorrectAnswersCount",
       Cell: ({ row }) => (
-        <Typography>{row.original.attempt_incorrect_answers_count}</Typography>
+        <Typography>{row.original.incorrect_answers_count}</Typography>
       ),
     },
   ]);
