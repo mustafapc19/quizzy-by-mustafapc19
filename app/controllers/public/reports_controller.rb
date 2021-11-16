@@ -32,13 +32,10 @@ class Public::ReportsController < ApplicationController
   end
 
   def export_download
-    job_id = params[:id]
-    file_path = file_path_from_job_id(job_id)
+    report = Report.find_by(job_id: params[:id])
+    url = rails_blob_path(report.file, disposition: "attachment")
 
-    # render status: :ok, json: { file_path: file_path }
-    send_file "storage/#{file_path}", type: "application/xlsx; charset=utf-8", filename: file_path
-    #
-    # redirect_to file_path, status: :found
+    render status: :ok, json: { url: url }
   end
 
   private

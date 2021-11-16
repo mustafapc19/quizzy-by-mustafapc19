@@ -14,12 +14,7 @@ const ExportDownload = () => {
   const handleClick = async () => {
     try {
       const response = await reportsApi.exportDownload(exportId);
-      // saveAs(response.data.file_path, "export.xls");
-      logger.info(response.data);
-      const blob = new Blob([...response.data], {
-        type: "application/xlsx; charset=utf-8",
-      });
-      saveAs(blob, "export.xls");
+      saveAs(response.data.url, "export.xls");
     } catch (error) {
       handleError(error);
     }

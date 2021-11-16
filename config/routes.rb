@@ -20,5 +20,7 @@ Rails.application.routes.draw do
   get "/public/:slug/register", to: "public/attempts#index"
 
   root "home#index"
-  get "*path", to: "home#index", via: :all
+  get "*path", to: "home#index", constraints: lambda { |req|
+    req.path.exclude? "rails/active_storage"
+  }
 end

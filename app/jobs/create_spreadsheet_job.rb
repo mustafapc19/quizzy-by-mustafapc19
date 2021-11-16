@@ -29,11 +29,17 @@ class CreateSpreadsheetJob
       sheet.row(index + 1).push attempt.incorrect_answers_count
     end
 
-    file_path = "storage/#{current_user.first_name}-#{current_user.last_name}-#{self.jid}.xls"
+    file_path = "tmp/#{current_user.first_name}-#{current_user.last_name}-#{self.jid}.xls"
     book.write file_path
+
+    report = Report.new(job_id: self.jid)
+    report.file.attach(
+      io: File.open(file_path),
+      filename: "#{current_user.first_name}-#{current_user.last_name}-#{self.jid}.xls")
+    report.save
 
     DeleteSpreadsheetFile.perform_at(
       3.hours.from_now,
-      file_path)
+      file_path, self.jid)
   end
 end
