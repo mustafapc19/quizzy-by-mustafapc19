@@ -10,6 +10,7 @@ import handleError from "common/error";
 import { initializeLogger } from "common/logger";
 import Login from "components/Authentication/Login";
 import PrivateRoute from "components/Common/PrivateRoute";
+import ShowLoading from "components/Common/ShowLoading";
 import NavBar from "components/NavBar";
 import CreateQuestion from "components/Questions/create";
 import EditQuestion from "components/Questions/edit";
@@ -44,7 +45,7 @@ const App = () => {
   }, []);
 
   if (loading) {
-    return <h1>Loading...</h1>;
+    return <ShowLoading />;
   }
 
   const handleLogout = async () => {

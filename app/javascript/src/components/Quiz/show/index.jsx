@@ -3,12 +3,14 @@ import React, { useEffect } from "react";
 import { Button } from "neetoui";
 
 import quizzesApi from "apis/quizzes";
+import ShowLoading from "components/Common/ShowLoading";
 import { useQuizzes } from "contexts/quizzes";
 
 import ListQuizzes from "./ListQuizzes";
 
 const ShowQuiz = () => {
   const [quizzes, setQuizzes] = useQuizzes();
+  const [loading, setLoading] = React.useState(true);
 
   useEffect(async () => {
     try {
@@ -20,6 +22,7 @@ const ShowQuiz = () => {
         quizzes[quiz.id] = quiz;
       });
       setQuizzes(quizzes);
+      setLoading(false);
     } catch (error) {
       logger.error(error);
     }
@@ -29,7 +32,9 @@ const ShowQuiz = () => {
     window.location.href = "/quiz/create";
   };
 
-  return (
+  return loading ? (
+    <ShowLoading />
+  ) : (
     <div className="mx-10 space-y-2">
       <div className="flex flex-row justify-end">
         <Button

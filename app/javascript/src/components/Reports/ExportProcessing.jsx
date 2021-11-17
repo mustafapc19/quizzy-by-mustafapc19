@@ -1,10 +1,10 @@
 import React, { useEffect } from "react";
 
-import { PageLoader, Typography } from "neetoui";
 import { useHistory, useParams } from "react-router-dom";
 
 import reportsApi from "apis/reports";
 import handleError from "common/error";
+import ShowLoading from "components/Common/ShowLoading";
 
 const ExportProcessing = () => {
   const { exportId } = useParams();
@@ -16,7 +16,7 @@ const ExportProcessing = () => {
       if (response.data.status === "complete") {
         history.replace(`/reports/download/${exportId}`);
       } else {
-        setTimeout(checkIfDownloadComplete, 5000);
+        setTimeout(checkIfDownloadComplete, 1000);
       }
     } catch (error) {
       handleError(error);
@@ -26,13 +26,8 @@ const ExportProcessing = () => {
   useEffect(checkIfDownloadComplete, []);
 
   return (
-    <div className="flex flex-row justify-center pt-64">
-      <div>
-        <PageLoader />
-        <Typography className="pt-4">
-          Your report is being prepared for downloading
-        </Typography>
-      </div>
+    <div>
+      <ShowLoading label="Your report is being prepared for downloading" />
     </div>
   );
 };

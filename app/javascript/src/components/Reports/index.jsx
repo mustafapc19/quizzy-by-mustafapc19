@@ -5,16 +5,20 @@ import { Button } from "neetoui";
 import { useHistory } from "react-router-dom";
 
 import reportsApi from "apis/reports";
+import ShowLoading from "components/Common/ShowLoading";
 
 import ListReports from "./ListReports";
 
 const Reports = () => {
   const [reports, setReports] = React.useState([]);
+  const [loading, setLoading] = React.useState(true);
+
   const history = useHistory();
 
   useEffect(async () => {
     const response = await reportsApi.list();
     setReports([...response.data.reports]);
+    setLoading(false);
     logger.info(response);
   }, []);
 
@@ -24,8 +28,10 @@ const Reports = () => {
     logger.info(response);
   };
 
-  return (
-    <div>
+  return loading ? (
+    <ShowLoading />
+  ) : (
+    <>
       <div className="flex flex-row justify-between">
         <h1>Reports</h1>
         <Button
@@ -44,7 +50,7 @@ const Reports = () => {
           <ListReports reports={reports} />
         </div>
       )}
-    </div>
+    </>
   );
 };
 
