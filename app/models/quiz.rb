@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 class Quiz < ApplicationRecord
+  is_sqlite_db = ActiveRecord::Base.connection_db_config.configuration_hash[:adapter] == "sqlite3"
+  DB_REGEX_OPERATOR = is_sqlite_db ? "REGEXP" : "~*"
+
   belongs_to :user
   has_many :questions, dependent: :destroy
   has_many :attempts, dependent: :destroy
@@ -11,16 +14,22 @@ class Quiz < ApplicationRecord
   validates :name, presence: true
 
   def set_slug
-    itr = 1
+    if slug == nil
+      name_slug = name.parameterize
+      regex_pattern = "slug #{DB_REGEX_OPERATOR} ?"
+      latest_quiz_slug = Quiz.where(
+        regex_pattern,
+        "#{name_slug}$|#{name_slug}-[0-9]+$"
+      ).order("LENGTH(slug) DESC", slug: :desc).first&.slug
 
-    if !self.slug.present?
-      loop do
-        title_slug = self.name.parameterize
-        slug_candidate = itr > 1 ? "#{title_slug}-#{itr}" : title_slug
-        break self.slug = slug_candidate unless Quiz.exists?(slug: slug_candidate)
-
-        itr += 1
+      slug_count = 0
+      if latest_quiz_slug.present?
+        slug_count = latest_quiz_slug.split("-").last.to_i
+        only_one_slug_exists = slug_count == 0
+        slug_count = 1 if only_one_slug_exists
       end
+      slug_candidate = slug_count.positive? ? "#{name_slug}-#{slug_count + 1}" : name_slug
+      self.slug = slug_candidate
     end
   end
 end
