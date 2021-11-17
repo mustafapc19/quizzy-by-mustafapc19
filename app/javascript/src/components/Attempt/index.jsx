@@ -46,7 +46,7 @@ const Attempt = ({ quiz, questions }) => {
           <></>
         )
       ) : (
-        <div className="flex flex-row justify-between">
+        <div className="flex flex-row justify-center pt-64">
           <Typography className="flex" style="h2" weight="medium">
             This Quiz does not exist
           </Typography>
