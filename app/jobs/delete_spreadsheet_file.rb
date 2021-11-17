@@ -5,7 +5,8 @@ class DeleteSpreadsheetFile
 
   def perform(file_path, job_id)
     File.delete(file_path) if File.exist?(file_path)
-    report = Report.find_by(id: job_id)
+
+    report = Report.find_by(job_id: job_id)
     report.file.purge
     report.destroy!
   end

@@ -12,6 +12,5 @@ Sidekiq.configure_server do |config|
   config.redis = { url: ENV["REDIS_URL"], size: 4, network_timeout: 5 }
   Sidekiq::Status.configure_server_middleware config, expiration: 30.minutes
 
-  # accepts :expiration (optional)
   Sidekiq::Status.configure_client_middleware config, expiration: 30.minutes
 end

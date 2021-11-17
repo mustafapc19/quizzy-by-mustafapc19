@@ -38,8 +38,6 @@ class CreateSpreadsheetJob
       filename: "#{current_user.first_name}-#{current_user.last_name}-#{self.jid}.xls")
     report.save
 
-    DeleteSpreadsheetFile.perform_at(
-      3.hours.from_now,
-      file_path, self.jid)
+    DeleteSpreadsheetFile.perform_at(3.hours.from_now, file_path, self.jid)
   end
 end
