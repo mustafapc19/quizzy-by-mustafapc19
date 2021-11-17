@@ -21,7 +21,7 @@ import ExportDownload from "components/Reports/ExportDownload";
 import ExportProcessing from "components/Reports/ExportProcessing";
 import { QuizzesProvider } from "contexts/quizzes";
 import {
-  clearAuthFromLocalStorage,
+  clearLocalStorage,
   getFromLocalStorage,
   getUserDataFromLocalStorage,
 } from "helpers/storage";
@@ -50,7 +50,7 @@ const App = () => {
   const handleLogout = async () => {
     try {
       await authApi.logout();
-      clearAuthFromLocalStorage();
+      clearLocalStorage();
       resetAuthTokens();
       window.location.href = "/";
       setIsLoggedIn(false);
