@@ -43,7 +43,7 @@ class Public::ReportsController < ApplicationController
     def load_attempts
       @attempts = Attempt.includes(
         [:quiz, :user]
-      ).where(quiz: { user_id: @current_user.id })
+      ).where(quiz: { user_id: @current_user.id }, submitted: true)
     end
 
     def file_path_from_job_id(job_id)
