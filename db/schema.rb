@@ -12,7 +12,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_11_16_160008) do
+ActiveRecord::Schema.define(version: 2021_11_17_130413) do
 
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
@@ -63,6 +63,7 @@ unique: true
     t.integer "correct_answers_count"
     t.integer "incorrect_answers_count"
     t.index ["quiz_id"], name: "index_attempts_on_quiz_id"
+    t.index ["user_id", "quiz_id"], name: "index_attempts_on_user_id_and_quiz_id", unique: true
     t.index ["user_id"], name: "index_attempts_on_user_id"
   end
 

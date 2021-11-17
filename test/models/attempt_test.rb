@@ -62,4 +62,11 @@ class AttemptTest < ActiveSupport::TestCase
 
     assert @attempt.incorrect_answers_count == 1
   end
+
+  def test_user_should_have_only_one_quiz_for_an_attempt
+    @attempt.save
+    @attempt_same = @user.attempts.new(
+      quiz_id: @quiz.id)
+    assert_not @attempt_same.valid?
+  end
 end
