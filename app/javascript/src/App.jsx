@@ -10,6 +10,7 @@ import handleError from "common/error";
 import { initializeLogger } from "common/logger";
 import Login from "components/Authentication/Login";
 import PrivateRoute from "components/Common/PrivateRoute";
+import ShowLoading from "components/Common/ShowLoading";
 import NavBar from "components/NavBar";
 import CreateQuestion from "components/Questions/create";
 import EditQuestion from "components/Questions/edit";
@@ -17,9 +18,11 @@ import ShowQuestions from "components/Questions/show";
 import CreateQuiz from "components/Quiz/create";
 import ShowQuiz from "components/Quiz/show";
 import Reports from "components/Reports";
+import ExportDownload from "components/Reports/ExportDownload";
+import ExportProcessing from "components/Reports/ExportProcessing";
 import { QuizzesProvider } from "contexts/quizzes";
 import {
-  clearAuthFromLocalStorage,
+  clearLocalStorage,
   getFromLocalStorage,
   getUserDataFromLocalStorage,
 } from "helpers/storage";
@@ -42,13 +45,13 @@ const App = () => {
   }, []);
 
   if (loading) {
-    return <h1>Loading...</h1>;
+    return <ShowLoading />;
   }
 
   const handleLogout = async () => {
     try {
       await authApi.logout();
-      clearAuthFromLocalStorage();
+      clearLocalStorage();
       resetAuthTokens();
       window.location.href = "/";
       setIsLoggedIn(false);
@@ -69,6 +72,18 @@ const App = () => {
           <Router>
             <Switch>
               <Route exact path="/login" component={Login} />
+              <PrivateRoute
+                path="/reports/download/:exportId"
+                redirectRoute="/reports"
+                condition={!isLoggedIn}
+                component={ExportDownload}
+              />
+              <PrivateRoute
+                path="/reports/export/:exportId"
+                redirectRoute="/reports"
+                condition={!isLoggedIn}
+                component={ExportProcessing}
+              />
               <PrivateRoute
                 path="/reports"
                 redirectRoute="/login"

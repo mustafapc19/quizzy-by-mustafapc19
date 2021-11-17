@@ -26,7 +26,7 @@ const setToLocalStorage = ({
   if (role) localStorage.setItem("role", JSON.stringify(role));
 };
 
-const clearAuthFromLocalStorage = () => {
+const clearLocalStorage = () => {
   localStorage.setItem("authToken", JSON.stringify(null));
   localStorage.setItem("authEmail", JSON.stringify(null));
   localStorage.setItem("authUserId", JSON.stringify(null));
@@ -61,6 +61,6 @@ const getFromLocalStorage = key => {
 export {
   setToLocalStorage,
   getFromLocalStorage,
-  clearAuthFromLocalStorage,
+  clearLocalStorage,
   getUserDataFromLocalStorage,
 };

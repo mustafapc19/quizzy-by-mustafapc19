@@ -1,13 +1,14 @@
 import React from "react";
 
 import { Typography } from "neetoui";
+import { useHistory } from "react-router-dom";
 
 import attemptsApi from "apis/attempts";
 import authApi from "apis/auth";
 import { setAuthHeaders } from "apis/axios";
 import handleError from "common/error";
 import { useAttempt } from "contexts/attempt";
-import { setToLocalStorage } from "helpers/storage";
+import { clearLocalStorage, setToLocalStorage } from "helpers/storage";
 
 import RegistrationForm from "./Form/RegistrationForm";
 
@@ -15,6 +16,7 @@ import { urlRoot } from "../constants";
 
 const Registration = () => {
   const [attempt, setAttempt] = useAttempt();
+  const history = useHistory();
 
   const handleSubmit = async values => {
     try {
@@ -53,8 +55,12 @@ const Registration = () => {
 
       logger.info(response);
 
-      setAttempt(old => ({ ...old, id: response.data.id }));
-      window.location.href = `${urlRoot(attempt.quiz)}/`;
+      attempt.id = response.data.id;
+      attempt.loggedIn = true;
+
+      setAttempt({ ...attempt });
+      clearLocalStorage();
+      history.push(`${urlRoot(attempt.quiz)}/`);
     } catch (error) {
       handleError(error);
     }

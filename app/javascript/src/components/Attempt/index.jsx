@@ -2,12 +2,11 @@ import React, { useEffect, useState } from "react";
 
 import { Typography } from "neetoui";
 import PropTypes from "prop-types";
-import { either, isEmpty, isNil } from "ramda";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
 import { setAuthHeaders } from "apis/axios";
 import { initializeLogger } from "common/logger";
-import PrivateRoute from "components/Common/PrivateRoute";
+import NavBar from "components/NavBar";
 import { AttemptProvider } from "contexts/attempt";
 import { getFromLocalStorage } from "helpers/storage";
 
@@ -15,15 +14,8 @@ import { urlRoot } from "./constants";
 import Registration from "./Registration";
 import ShowAttempt from "./show";
 
-import NavBar from "../NavBar";
-
 const Attempt = ({ quiz, questions }) => {
   const [loading, setLoading] = useState(true);
-
-  const isLoggedIn = () => {
-    const authToken = getFromLocalStorage("authToken");
-    return !either(isNil, isEmpty)(authToken) && authToken !== "null";
-  };
 
   useEffect(() => {
     initializeLogger();
@@ -47,19 +39,14 @@ const Attempt = ({ quiz, questions }) => {
                 path={`${urlRoot(quiz)}/register`}
                 component={Registration}
               />
-              <PrivateRoute
-                path={`${urlRoot(quiz)}/`}
-                redirectRoute={`${urlRoot(quiz)}/register`}
-                condition={!isLoggedIn()}
-                component={ShowAttempt}
-              />
+              <Route path={`${urlRoot(quiz)}/`} component={ShowAttempt} />
             </Switch>
           </Router>
         ) : (
           <></>
         )
       ) : (
-        <div className="flex flex-row justify-between">
+        <div className="flex flex-row justify-center pt-64">
           <Typography className="flex" style="h2" weight="medium">
             This Quiz does not exist
           </Typography>

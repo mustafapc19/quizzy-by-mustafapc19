@@ -71,6 +71,6 @@ class Public::AttemptsController < ApplicationController
     end
 
     def load_quiz_by_slug
-      @quiz = Quiz.find_by(slug: params[:slug])
+      @quiz = Quiz.includes(questions: [:options]).find_by(slug: params[:slug])
     end
 end

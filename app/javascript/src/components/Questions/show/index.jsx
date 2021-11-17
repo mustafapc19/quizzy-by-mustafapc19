@@ -6,6 +6,7 @@ import { Link, useLocation } from "react-router-dom";
 
 import questionsApi from "apis/questions";
 import quizzesApi from "apis/quizzes";
+import ShowLoading from "components/Common/ShowLoading";
 
 import ConfirmDelete from "./ConfirmDelete";
 
@@ -14,6 +15,7 @@ const ShowQuestions = () => {
   const [questions, setQuestions] = useState([]);
   const [showConfirmDeleteModal, setShowConfirmDeleteModal] = useState(false);
   const [onFocusQuestion, setOnFocusQuestion] = useState({});
+  const [loading, setLoading] = useState(true);
 
   useEffect(async () => {
     const response = await questionsApi.list({ quiz_id: quiz.id });
@@ -31,6 +33,7 @@ const ShowQuestions = () => {
 
     questions.sort((a, b) => b.time - a.time);
     setQuestions([...questions]);
+    setLoading(false);
   }, []);
 
   const handlePublish = async () => {
@@ -44,7 +47,9 @@ const ShowQuestions = () => {
     setQuiz({ ...quiz });
   };
 
-  return (
+  return loading ? (
+    <ShowLoading />
+  ) : (
     <div className="px-8">
       <div className="flex flex-row justify-between">
         <Typography

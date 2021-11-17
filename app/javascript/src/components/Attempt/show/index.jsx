@@ -2,10 +2,13 @@ import React, { useEffect, useState } from "react";
 
 import { Check, Close } from "neetoicons";
 import { Button, Typography } from "neetoui";
+import { useHistory } from "react-router-dom";
 
 import attemptsApi from "apis/attempts";
 import handleError from "common/error";
 import { useAttempt } from "contexts/attempt";
+
+import { urlRoot } from "../constants";
 
 const createInitialAnswers = questions => {
   const answers = {};
@@ -21,6 +24,7 @@ const createInitialAnswers = questions => {
 };
 
 const ShowAttempt = () => {
+  const history = useHistory();
   const [attempt, setAttempt] = useAttempt();
 
   const [answers, setAnswers] = useState(
@@ -81,7 +85,13 @@ const ShowAttempt = () => {
     setLoading(false);
   };
 
-  useEffect(fetchAttempt, []);
+  useEffect(() => {
+    if (!attempt.loggedIn) {
+      history.push(`${urlRoot(attempt.quiz)}/register`);
+    }
+
+    fetchAttempt();
+  }, []);
 
   const showResultText = `Thank you for taking the quiz, here are your results. You
           have submitted ${correctCount} correct and
