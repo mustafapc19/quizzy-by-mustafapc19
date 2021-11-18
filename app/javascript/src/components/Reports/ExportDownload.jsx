@@ -2,19 +2,20 @@ import React from "react";
 
 import { saveAs } from "file-saver";
 import { Button, Typography } from "neetoui";
-import { useParams } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 
+import reportsApi from "apis/reports";
 import handleError from "common/error";
-
-import reportsApi from "../../apis/reports";
 
 const ExportDownload = () => {
   const { exportId } = useParams();
+  const history = useHistory();
 
   const handleClick = async () => {
     try {
       const response = await reportsApi.exportDownload(exportId);
       saveAs(response.data.url, "export.xls");
+      history.replace("/reports");
     } catch (error) {
       handleError(error);
     }
@@ -28,7 +29,7 @@ const ExportDownload = () => {
             className="flex"
             label="Download report"
             onClick={handleClick}
-          ></Button>
+          />
         </div>
       </div>
     </div>
