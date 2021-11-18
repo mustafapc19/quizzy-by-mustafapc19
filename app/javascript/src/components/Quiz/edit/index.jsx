@@ -19,10 +19,7 @@ const EditQuiz = ({ quiz, showEditQuizModal, setShowEditQuizModal }) => {
         onClose={closeModal}
         closeButton={false}
       >
-        <EditQuizForm
-          quiz={quiz}
-          setShowEditQuizModal={setShowEditQuizModal}
-        ></EditQuizForm>
+        <EditQuizForm quiz={quiz} setShowEditQuizModal={setShowEditQuizModal} />
       </Modal>
     </div>
   );

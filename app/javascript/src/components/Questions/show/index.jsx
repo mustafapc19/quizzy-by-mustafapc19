@@ -140,7 +140,7 @@ const ShowQuestions = () => {
                     className="flex mb-2"
                     label="Delete"
                     onClick={onDelete}
-                  ></Button>
+                  />
                 </div>
               </div>
               <div className="flex flex-col w-2/3">

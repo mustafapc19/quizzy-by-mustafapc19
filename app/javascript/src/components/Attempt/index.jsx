@@ -30,7 +30,7 @@ const Attempt = ({ quiz, questions }) => {
       questions={questions}
       attemptId={getFromLocalStorage("attemptId")}
     >
-      <NavBar userData={{}}></NavBar>
+      <NavBar userData={{ quiz }}></NavBar>
       {quiz ? (
         !loading ? (
           <Router>
