@@ -26,6 +26,13 @@ class AttemptAnswerTest < ActiveSupport::TestCase
   end
 
   def test_attempt_should_not_be_valid_and_saved_without_attempt
-    assert_not @attempt_answer.update(question_id: nil)
+    assert_not @attempt_answer.update(attempt_id: nil)
+  end
+
+  def test_attempt_should_have_unique_set_of_question_and_attempt
+    @attempt_answer_second = @attempt.attempt_answers.new(
+      question_id: @question.id,
+      option_id: @option.id)
+    assert @attempt_answer_second.invalid?
   end
 end
