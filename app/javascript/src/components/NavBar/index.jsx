@@ -4,12 +4,22 @@ import { Button, Typography } from "neetoui";
 import { Header } from "neetoui/layouts";
 import PropTypes from "prop-types";
 
+import { urlRoot } from "components/Attempt/constants";
+
 const NavBar = ({ userData, isLoggedIn, handleLogout }) => {
   const handleReports = () => {
     window.location.href = "/reports";
   };
 
   const adminMode = userData.role === "administrator";
+
+  const navigateHome = () => {
+    if (adminMode) {
+      window.location.href = "/";
+    } else {
+      window.location.href = `${urlRoot(userData.quiz)}/register`;
+    }
+  };
 
   return (
     <div className="mx-2">
@@ -48,11 +58,15 @@ const NavBar = ({ userData, isLoggedIn, handleLogout }) => {
           )
         }
         title={
-          <Typography className="pl-8" style="h1">
+          <Typography
+            className="ml-8 cursor-pointer"
+            style="h1"
+            onClick={navigateHome}
+          >
             Quizzy
           </Typography>
         }
-      ></Header>
+      />
     </div>
   );
 };

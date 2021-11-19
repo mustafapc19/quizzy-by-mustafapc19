@@ -6,7 +6,7 @@ import QuestionForm from "../Form/QuestionForm";
 
 const CreateQuestion = () => {
   const { quiz } = useLocation().state;
-  return <QuestionForm quiz={quiz}></QuestionForm>;
+  return <QuestionForm quiz={quiz} />;
 };
 
 export default CreateQuestion;

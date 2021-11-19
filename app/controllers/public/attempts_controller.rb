@@ -44,7 +44,7 @@ class Public::AttemptsController < ApplicationController
     if @attempt
       if @attempt.submitted
         render status: :unprocessable_entity,
-          json: { error: t("attempt.already_submitted") }
+          json: { error: t("attempt.already_submitted") } && return
       end
 
       @attempt.attributes = attempt_param

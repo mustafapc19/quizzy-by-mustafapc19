@@ -42,14 +42,14 @@ const ShowQuiz = () => {
           size="large"
           label="Add new quiz"
           onClick={handleNewQuiz}
-        ></Button>
+        />
       </div>
       {Object.keys(quizzes).length === 0 ? (
         <div className="flex items-center justify-center pt-16">
           You have not created any quiz
         </div>
       ) : (
-        <ListQuizzes quizzes={quizzes}></ListQuizzes>
+        <ListQuizzes quizzes={quizzes} />
       )}
     </div>
   );

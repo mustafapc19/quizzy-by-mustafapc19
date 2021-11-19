@@ -67,7 +67,7 @@ const App = () => {
           userData={userData}
           isLoggedIn={isLoggedIn}
           handleLogout={handleLogout}
-        ></NavBar>
+        />
         <div className="mx-8 mt-6">
           <Router>
             <Switch>
