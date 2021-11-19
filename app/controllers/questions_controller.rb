@@ -1,9 +1,10 @@
 # frozen_string_literal: true
 
 class QuestionsController < ApplicationController
-  after_action :verify_authorized
   before_action :authenticate_user_using_x_auth_token
   before_action :load_quiz
+
+  after_action :verify_authorized
 
   def index
     authorize @quiz

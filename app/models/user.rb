@@ -8,9 +8,6 @@ class User < ApplicationRecord
   has_many :quizzes
   has_many :attempts
 
-  has_secure_password
-  has_secure_token :authentication_token
-
   validates :email, presence: true, uniqueness: true, format: { with: VALID_EMAIL_REGEX }
   validates :first_name, presence: true, length: { maximum: 50 }
   validates :last_name, presence: true, length: { maximum: 50 }
@@ -18,6 +15,9 @@ class User < ApplicationRecord
   validates :password_confirmation, presence: true, on: :create
 
   before_save :to_lowercase
+
+  has_secure_password
+  has_secure_token :authentication_token
 
   private
 
