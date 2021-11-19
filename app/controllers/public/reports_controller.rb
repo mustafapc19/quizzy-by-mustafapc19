@@ -45,8 +45,4 @@ class Public::ReportsController < ApplicationController
         [:quiz, :user]
       ).where(quiz: { user_id: @current_user.id }, submitted: true)
     end
-
-    def file_path_from_job_id(job_id)
-      "#{@current_user.first_name}-#{@current_user.last_name}-#{job_id}.xls"
-    end
 end
