@@ -5,11 +5,11 @@ class Attempt < ApplicationRecord
   belongs_to :user
   has_many :attempt_answers, dependent: :destroy
 
-  accepts_nested_attributes_for :attempt_answers
-
   validates_uniqueness_of :user_id, scope: [:quiz_id]
 
   before_save :submit_if_answers_and_correct_and_incorrect_answers_count
+
+  accepts_nested_attributes_for :attempt_answers
 
   private
 

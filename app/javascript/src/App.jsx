@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 import { either, isEmpty, isNil } from "ramda";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { BrowserRouter as Router, Switch } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 
 import authApi from "apis/auth";
@@ -71,7 +71,13 @@ const App = () => {
         <div className="mx-8 mt-6">
           <Router>
             <Switch>
-              <Route exact path="/login" component={Login} />
+              <PrivateRoute
+                exact
+                path="/login"
+                redirectRoute="/"
+                condition={isLoggedIn}
+                component={Login}
+              />
               <PrivateRoute
                 path="/reports/download/:exportId"
                 redirectRoute="/reports"

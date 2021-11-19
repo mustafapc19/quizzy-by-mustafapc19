@@ -1,10 +1,11 @@
 # frozen_string_literal: true
 
 class QuizzesController < ApplicationController
-  after_action :verify_authorized, except: :index
-  after_action :verify_policy_scoped, only: :index
   before_action :authenticate_user_using_x_auth_token
   before_action :load_quiz, only: %i[show update destroy]
+
+  after_action :verify_authorized, except: :index
+  after_action :verify_policy_scoped, only: :index
 
   def index
     @quizzes = policy_scope(Quiz)

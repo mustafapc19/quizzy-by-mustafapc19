@@ -4,15 +4,16 @@ class Question < ApplicationRecord
   belongs_to :quiz
   has_many :options, dependent: :destroy
 
-  accepts_nested_attributes_for :options, allow_destroy: true
+  before_validation :validate_options
   validates :name, presence: true
 
-  before_validation :validate_options
+  accepts_nested_attributes_for :options, allow_destroy: true
 
   private
 
     def validate_options
-      options = self.options
+      options = self.options.select { |option| !option.marked_for_destruction? }
+
       unless 2 <= options.length && options.length <= 4
         errors.add(:options, "Only 2-4 options are allowed")
       end

@@ -16,7 +16,7 @@ const ExportProcessing = () => {
       if (response.data.status === "complete") {
         history.replace(`/reports/download/${exportId}`);
       } else {
-        setTimeout(checkIfDownloadComplete, 1000);
+        setTimeout(checkIfDownloadComplete, 300);
       }
     } catch (error) {
       handleError(error);

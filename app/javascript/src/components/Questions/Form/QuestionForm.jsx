@@ -103,12 +103,22 @@ const QuestionForm = ({ quiz, question }) => {
       }
     });
 
+    if (correctOptionIndex === null) {
+      errors["correctOption"] = "Required";
+      Toastr.error(Error("Please select a correct option"));
+    }
+
     return errors;
   };
 
   const onAddOption = () => {
     setOptions(old => [...old, { name: "" }]);
   };
+
+  const showSelectedOptionLabel =
+    correctOptionIndex === null
+      ? "Select a correct option"
+      : `Option ${correctOptionIndex + 1}`;
 
   return (
     <div className="px-10 py-2">
@@ -128,9 +138,14 @@ const QuestionForm = ({ quiz, question }) => {
               };
 
               const optionOnRemove = () => {
-                if (index == options.length - 1) {
-                  setCorrectOptionIndex(index - 1);
+                if (correctOptionIndex === index) {
+                  setCorrectOptionIndex(null);
                 }
+
+                if (index < correctOptionIndex) {
+                  setCorrectOptionIndex(correctOptionIndex - 1);
+                }
+
                 setOptions(
                   options.filter(
                     (_, oldOptionIndex) => oldOptionIndex !== index
@@ -172,10 +187,7 @@ const QuestionForm = ({ quiz, question }) => {
             ) : (
               <></>
             )}
-            <Dropdown
-              buttonStyle="text"
-              label={`Option ${correctOptionIndex + 1}`}
-            >
+            <Dropdown buttonStyle="text" label={showSelectedOptionLabel}>
               {options.map((_, index) => {
                 const setCorrectOptionOnClick = () => {
                   setCorrectOptionIndex(index);
