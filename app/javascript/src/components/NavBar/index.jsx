@@ -8,7 +8,7 @@ import { urlRoot } from "components/Attempt/constants";
 
 const NavBar = ({ userData, isLoggedIn, handleLogout }) => {
   const handleReports = () => {
-    window.location.href = "/reports";
+    window.location.href = "/report";
   };
 
   const adminMode = userData.role === "administrator";

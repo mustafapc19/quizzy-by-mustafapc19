@@ -15,7 +15,7 @@ const ExportDownload = () => {
     try {
       const response = await reportsApi.exportDownload(exportId);
       saveAs(response.data.url, "export.xls");
-      history.replace("/reports");
+      history.replace("/report");
     } catch (error) {
       handleError(error);
     }

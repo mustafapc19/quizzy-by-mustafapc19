@@ -14,7 +14,7 @@ const ExportProcessing = () => {
     try {
       const response = await reportsApi.exportStatus(exportId);
       if (response.data.status === "complete") {
-        history.replace(`/reports/download/${exportId}`);
+        history.replace(`/report/download/${exportId}`);
       } else {
         setTimeout(checkIfDownloadComplete, 300);
       }
