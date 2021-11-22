@@ -11,7 +11,7 @@ class CreateSpreadsheetJob
 
     attempts = Attempt.includes(
       [:quiz, :user]
-      ).where(quiz: { user_id: user_id })
+      ).where(quiz: { user_id: user_id }, submitted: true)
 
     Spreadsheet.client_encoding = "UTF-8"
     book = Spreadsheet::Workbook.new
