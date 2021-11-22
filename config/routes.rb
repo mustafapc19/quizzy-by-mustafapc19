@@ -7,15 +7,16 @@ Rails.application.routes.draw do
     resources :quizzes do
       resources :questions, except: %i[show]
     end
-  end
-
-  namespace :public do
-    resources :attempts, except: %i[destroy]
     resources :reports, only: %i[index]
     get "/reports/export_start", to: "reports#export_start"
     get "/reports/export_status/:id", to: "reports#export_status"
     get "/reports/export_download/:id", to: "reports#export_download"
   end
+
+  namespace :public do
+    resources :attempts, except: %i[destroy]
+  end
+
   get "/public/:slug", to: "public/attempts#index"
   get "/public/:slug/register", to: "public/attempts#index"
 

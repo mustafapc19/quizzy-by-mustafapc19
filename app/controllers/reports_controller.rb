@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Public::ReportsController < ApplicationController
+class ReportsController < ApplicationController
   before_action :authenticate_user_using_x_auth_token
   before_action :reject_if_not_administrator
   before_action :load_attempts, only: [:index, :export_start]
