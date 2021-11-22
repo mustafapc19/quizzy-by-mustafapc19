@@ -5,6 +5,7 @@ import { Button } from "neetoui";
 import { useHistory } from "react-router-dom";
 
 import reportsApi from "apis/reports";
+import handleError from "common/error";
 import ShowLoading from "components/Common/ShowLoading";
 
 import ListReports from "./ListReports";
@@ -16,16 +17,24 @@ const Reports = () => {
   const history = useHistory();
 
   useEffect(async () => {
-    const response = await reportsApi.list();
-    setReports([...response.data.reports]);
-    setLoading(false);
-    logger.info(response);
+    try {
+      const response = await reportsApi.list();
+      setReports([...response.data.reports]);
+      setLoading(false);
+      logger.info(response);
+    } catch (error) {
+      handleError(error);
+    }
   }, []);
 
   const downloadOnClick = async () => {
-    const response = await reportsApi.exportStart();
-    history.push(`/reports/export/${response.data.job_id}`);
-    logger.info(response);
+    try {
+      const response = await reportsApi.exportStart();
+      history.push(`/report/export/${response.data.job_id}`);
+      logger.info(response);
+    } catch (error) {
+      handleError(error);
+    }
   };
 
   return loading ? (

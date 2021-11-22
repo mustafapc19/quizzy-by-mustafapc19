@@ -79,19 +79,19 @@ const App = () => {
                 component={Login}
               />
               <PrivateRoute
-                path="/reports/download/:exportId"
-                redirectRoute="/reports"
+                path="/report/download/:exportId"
+                redirectRoute="/login"
                 condition={!isLoggedIn}
                 component={ExportDownload}
               />
               <PrivateRoute
-                path="/reports/export/:exportId"
-                redirectRoute="/reports"
+                path="/report/export/:exportId"
+                redirectRoute="/login"
                 condition={!isLoggedIn}
                 component={ExportProcessing}
               />
               <PrivateRoute
-                path="/reports"
+                path="/report"
                 redirectRoute="/login"
                 condition={!isLoggedIn}
                 component={Reports}
