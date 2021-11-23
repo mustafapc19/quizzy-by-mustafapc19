@@ -5,6 +5,9 @@ const create = ({ quiz_id, payload }) =>
 
 const list = ({ quiz_id }) => axios.get(`/quizzes/${quiz_id}/questions`);
 
+const show = ({ quiz_id, question_id }) =>
+  axios.get(`/quizzes/${quiz_id}/questions/${question_id}`);
+
 const update = ({ quiz_id, question_id, payload }) =>
   axios.put(`/quizzes/${quiz_id}/questions/${question_id}`, payload);
 
@@ -16,6 +19,7 @@ const questionsApi = {
   list,
   update,
   destroy,
+  show,
 };
 
 export default questionsApi;

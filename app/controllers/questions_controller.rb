@@ -3,7 +3,7 @@
 class QuestionsController < ApplicationController
   before_action :authenticate_user_using_x_auth_token
   before_action :load_quiz
-
+  before_action :authorize_and_find_question, only: %i[show update destroy]
   after_action :verify_authorized
 
   def index
@@ -26,9 +26,13 @@ class QuestionsController < ApplicationController
     end
   end
 
-  def update
-    authorize_and_find_question
+  def show
+    unless @question
+      render status: :not_found, json: { error: t("question.not_found") }
+    end
+  end
 
+  def update
     @question.attributes = question_params
 
     if @question.save
@@ -41,8 +45,6 @@ class QuestionsController < ApplicationController
   end
 
   def destroy
-    authorize_and_find_question
-
     if @question.destroy
       render status: :ok, json: {}
     else
