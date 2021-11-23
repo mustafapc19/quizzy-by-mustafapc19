@@ -1,14 +1,33 @@
 import React, { useState } from "react";
 
-import { Button, Typography } from "neetoui";
+import { Button, Toastr, Typography } from "neetoui";
 import { Link } from "react-router-dom";
 import { useTable } from "react-table";
 
-import ConfirmDelete from "./ConfirmDelete";
+import quizzesApi from "apis/quizzes";
+import handleError from "common/error";
+import { useQuizzes } from "contexts/quizzes";
 
-const Table = ({ quizzes }) => {
+import { fetchQuizzesList } from "../common";
+import ConfirmDelete from "../ConfirmDelete";
+
+const Table = () => {
+  const [quizzes, setQuizzes] = useQuizzes();
   const [showConfirmDeleteModal, setShowConfirmDeleteModal] = useState(false);
   const [quiz, setQuiz] = useState({});
+
+  const handleDelete = async () => {
+    try {
+      await quizzesApi.destroy(quiz.id);
+      await fetchQuizzesList(setQuizzes);
+      logger.info(quizzes);
+
+      Toastr.success("Quiz deleted successfuly");
+      setShowConfirmDeleteModal(false);
+    } catch (error) {
+      handleError(error);
+    }
+  };
 
   const data = React.useMemo(
     () =>
@@ -28,7 +47,7 @@ const Table = ({ quizzes }) => {
         Cell: ({ row }) => (
           <Link
             to={{
-              pathname: "/quiz/show",
+              pathname: `/quiz/${quizzes[row.original].id}/show`,
               state: { quiz: quizzes[row.original] },
             }}
           >
@@ -71,7 +90,7 @@ const Table = ({ quizzes }) => {
   return (
     <>
       <ConfirmDelete
-        quiz={quiz}
+        handleDelete={handleDelete}
         showConfirmDeleteModal={showConfirmDeleteModal}
         setShowConfirmDeleteModal={setShowConfirmDeleteModal}
       />

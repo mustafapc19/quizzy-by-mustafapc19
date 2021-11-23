@@ -1,39 +1,74 @@
 import React, { useEffect, useState } from "react";
 
 import { Check } from "neetoicons";
-import { Button, Typography } from "neetoui";
-import { Link, useLocation } from "react-router-dom";
+import { Button, Toastr, Typography } from "neetoui";
+import { Link, useParams } from "react-router-dom";
 
 import questionsApi from "apis/questions";
 import quizzesApi from "apis/quizzes";
+import handleError from "common/error";
+import NotFound from "components/Common/NotFound";
 import ShowLoading from "components/Common/ShowLoading";
 
-import ConfirmDelete from "./ConfirmDelete";
+import ConfirmDelete from "../ConfirmDelete";
 
-const ShowQuestions = () => {
-  const [quiz, setQuiz] = useState(useLocation().state.quiz);
+const ShowQuiz = () => {
+  const { quizId } = useParams();
+
+  const [quiz, setQuiz] = useState({});
   const [questions, setQuestions] = useState([]);
   const [showConfirmDeleteModal, setShowConfirmDeleteModal] = useState(false);
-  const [onFocusQuestion, setOnFocusQuestion] = useState({});
+  const [onDeleteQuestion, setOnDeleteQuestion] = useState({});
   const [loading, setLoading] = useState(true);
+  const [isError, setIsError] = useState(false);
+
+  const fetchQuiz = async () => {
+    const response = await quizzesApi.show(quizId);
+    setQuiz(response.data);
+  };
+
+  const fetchQuestions = async () => {
+    const response = await questionsApi.list({ quiz_id: quizId });
+    logger.info(response);
+
+    setQuestions(response.data.questions);
+  };
+
+  const handleDelete = async () => {
+    try {
+      await questionsApi.destroy({
+        question_id: onDeleteQuestion.id,
+        quiz_id: quiz.id,
+      });
+
+      await fetchQuestions();
+      setShowConfirmDeleteModal(false);
+      Toastr.success("Question deleted successfuly");
+    } catch (error) {
+      handleError(error);
+    }
+  };
+
+  const onDelete = question => {
+    setOnDeleteQuestion(question);
+    setShowConfirmDeleteModal(true);
+  };
+
+  const questionLabel = index => `Question ${index + 1}`;
+  const optionLabel = index => `Option ${index + 1}`;
+  const correctOptionColor = option => (option.correct ? "bg-green-100" : "");
+  const slugToUrl = `${window.location.origin}/public/${quiz.slug}`;
 
   useEffect(async () => {
-    const response = await questionsApi.list({ quiz_id: quiz.id });
-    logger.info(response);
-    response.data.questions.forEach(item => {
-      const date = new Date(item.question.created_at);
-      const time = date.getTime();
-      questions.push({
-        id: item.question.id,
-        options: item.options,
-        time,
-        ...item.question,
-      });
-    });
+    try {
+      await fetchQuiz();
+      await fetchQuestions();
 
-    questions.sort((a, b) => b.time - a.time);
-    setQuestions([...questions]);
-    setLoading(false);
+      setLoading(false);
+    } catch (error) {
+      logger.error(error);
+      setIsError(true);
+    }
   }, []);
 
   const handlePublish = async () => {
@@ -43,9 +78,14 @@ const ShowQuestions = () => {
       },
     });
     logger.info(response.data);
+
     quiz.slug = response.data.slug;
     setQuiz({ ...quiz });
   };
+
+  if (isError) {
+    return <NotFound label="Question not found" />;
+  }
 
   return loading ? (
     <ShowLoading />
@@ -64,7 +104,7 @@ const ShowQuestions = () => {
             label={
               <Link
                 to={{
-                  pathname: "/quiz/question/create",
+                  pathname: `/quiz/${quiz.id}/question/create`,
                   state: { quiz: quiz },
                 }}
               >
@@ -87,11 +127,8 @@ const ShowQuestions = () => {
       {quiz.slug?.length > 0 ? (
         <div className="py-2 px-2">
           Published link:
-          <a
-            className="text-blue-700 pl-1"
-            href={`${window.location.origin}/public/${quiz.slug}`}
-          >
-            {`${window.location.origin}/public/${quiz.slug}`}
+          <a className="text-blue-700 pl-1" href={slugToUrl}>
+            {slugToUrl}
           </a>
         </div>
       ) : (
@@ -105,17 +142,11 @@ const ShowQuestions = () => {
         </div>
       ) : (
         questions.map((question, index) => {
-          const onDelete = () => {
-            setOnFocusQuestion(question);
-            setShowConfirmDeleteModal(true);
-          };
-
-          const questionLabel = `Question ${index + 1}`;
           return (
             <div key={index} className="pb-8 pt-2">
               <div className="flex flex-row space-x-16 pt-2 bg-gray-100 w-2/3 px-2 rounded-t-lg">
                 <Typography className="flex" style="body2">
-                  {questionLabel}
+                  {questionLabel(index)}
                 </Typography>
                 <Typography className="flex-grow" style="h4">
                   {question.name}
@@ -127,7 +158,7 @@ const ShowQuestions = () => {
                     label={
                       <Link
                         to={{
-                          pathname: "/quiz/question/edit",
+                          pathname: `/quiz/${quiz.id}/question/${question.id}/edit`,
                           state: { quiz: quiz, question: question },
                         }}
                       >
@@ -139,23 +170,21 @@ const ShowQuestions = () => {
                     style="danger"
                     className="flex mb-2"
                     label="Delete"
-                    onClick={onDelete}
+                    onClick={() => onDelete(question)}
                   />
                 </div>
               </div>
               <div className="flex flex-col w-2/3">
                 {question.options.map((option, index) => {
-                  const optionLabel = `Option ${index + 1}`;
-                  const correctOptionColor = option.correct
-                    ? "bg-green-100"
-                    : "";
                   return (
                     <div
                       key={index}
-                      className={`flex flex-row space-x-20 py-1 border-gray-100  border-b-2 ${correctOptionColor}`}
+                      className={`flex flex-row space-x-20 py-1 border-gray-100  border-b-2 ${correctOptionColor(
+                        option
+                      )}`}
                     >
                       <Typography className="flex pl-2" style="body2">
-                        {optionLabel}
+                        {optionLabel(index)}
                       </Typography>
                       <Typography className="flex flex-grow" style="h5">
                         <div className="flex flex-row">
@@ -178,14 +207,12 @@ const ShowQuestions = () => {
         })
       )}
       <ConfirmDelete
-        quiz={quiz}
-        question={onFocusQuestion}
+        handleDelete={handleDelete}
         showConfirmDeleteModal={showConfirmDeleteModal}
-        setQuestions={setQuestions}
         setShowConfirmDeleteModal={setShowConfirmDeleteModal}
       />
     </div>
   );
 };
 
-export default ShowQuestions;
+export default ShowQuiz;

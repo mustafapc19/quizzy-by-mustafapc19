@@ -14,7 +14,7 @@ import ShowLoading from "components/Common/ShowLoading";
 import NavBar from "components/NavBar";
 import CreateQuestion from "components/Questions/create";
 import EditQuestion from "components/Questions/edit";
-import ShowQuestions from "components/Questions/show";
+import ShowQuiz from "components/Questions/show";
 import CreateQuiz from "components/Quiz/create";
 import EditQuiz from "components/Quiz/edit";
 import ListQuiz from "components/Quiz/list";
@@ -104,10 +104,10 @@ const App = () => {
                 component={EditQuiz}
               />
               <PrivateRoute
-                path="/quiz/show"
+                path="/quiz/:quizId/show"
                 redirectRoute="/login"
                 condition={!isLoggedIn}
-                component={ShowQuestions}
+                component={ShowQuiz}
               />
               <PrivateRoute
                 path="/quiz/create"
@@ -116,13 +116,13 @@ const App = () => {
                 component={CreateQuiz}
               />
               <PrivateRoute
-                path="/quiz/question/edit"
+                path="/quiz/:quizId/question/:questionId/edit"
                 redirectRoute="/login"
                 condition={!isLoggedIn}
                 component={EditQuestion}
               />
               <PrivateRoute
-                path="/quiz/question/create"
+                path="/quiz/:quizId/question/create"
                 redirectRoute="/login"
                 condition={!isLoggedIn}
                 component={CreateQuestion}

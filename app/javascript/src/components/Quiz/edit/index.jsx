@@ -29,7 +29,7 @@ const EditQuiz = () => {
   useEffect(fetchQuiz, []);
 
   if (isError) {
-    return <NotFound label={"Quiz not found"} />;
+    return <NotFound label="Quiz not found" />;
   }
 
   return loading ? (
