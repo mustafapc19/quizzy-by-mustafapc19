@@ -12,10 +12,11 @@ import Login from "components/Authentication/Login";
 import PrivateRoute from "components/Common/PrivateRoute";
 import ShowLoading from "components/Common/ShowLoading";
 import NavBar from "components/NavBar";
-import CreateQuestion from "components/Questions/create";
-import EditQuestion from "components/Questions/edit";
-import ShowQuestions from "components/Questions/show";
 import CreateQuiz from "components/Quiz/create";
+import EditQuiz from "components/Quiz/edit";
+import ListQuiz from "components/Quiz/list";
+import CreateQuestion from "components/Quiz/Questions/create";
+import EditQuestion from "components/Quiz/Questions/edit";
 import ShowQuiz from "components/Quiz/show";
 import Reports from "components/Reports";
 import ExportDownload from "components/Reports/ExportDownload";
@@ -97,10 +98,16 @@ const App = () => {
                 component={Reports}
               />
               <PrivateRoute
-                path="/quiz/show"
+                path="/quiz/:quizId/edit"
                 redirectRoute="/login"
                 condition={!isLoggedIn}
-                component={ShowQuestions}
+                component={EditQuiz}
+              />
+              <PrivateRoute
+                path="/quiz/:quizId/show"
+                redirectRoute="/login"
+                condition={!isLoggedIn}
+                component={ShowQuiz}
               />
               <PrivateRoute
                 path="/quiz/create"
@@ -109,13 +116,13 @@ const App = () => {
                 component={CreateQuiz}
               />
               <PrivateRoute
-                path="/quiz/question/edit"
+                path="/quiz/:quizId/question/:questionId/edit"
                 redirectRoute="/login"
                 condition={!isLoggedIn}
                 component={EditQuestion}
               />
               <PrivateRoute
-                path="/quiz/question/create"
+                path="/quiz/:quizId/question/create"
                 redirectRoute="/login"
                 condition={!isLoggedIn}
                 component={CreateQuestion}
@@ -124,7 +131,7 @@ const App = () => {
                 path="/"
                 redirectRoute="/login"
                 condition={!isLoggedIn}
-                component={ShowQuiz}
+                component={ListQuiz}
               />
             </Switch>
             <ToastContainer />

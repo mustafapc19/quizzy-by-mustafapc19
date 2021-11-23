@@ -1,23 +1,44 @@
 import React, { useState } from "react";
 
-import { Button, Typography } from "neetoui";
+import { Button, Toastr, Typography } from "neetoui";
 import { Link } from "react-router-dom";
 import { useTable } from "react-table";
 
-import ConfirmDelete from "./ConfirmDelete";
+import quizzesApi from "apis/quizzes";
+import handleError from "common/error";
+import { useQuizzes } from "contexts/quizzes";
 
-import EditQuiz from "../edit";
+import { fetchQuizzesList } from "../common";
+import ConfirmDelete from "../ConfirmDelete";
 
-const ListQuizzes = ({ quizzes }) => {
-  const [showEditQuizModal, setShowEditQuizModal] = useState(false);
+const Table = () => {
+  const [quizzes, setQuizzes] = useQuizzes();
   const [showConfirmDeleteModal, setShowConfirmDeleteModal] = useState(false);
-  const [onFocusQuiz, setOnFocusQuiz] = useState({});
+  const [quiz, setQuiz] = useState({});
+
+  const handleDelete = async () => {
+    try {
+      await quizzesApi.destroy(quiz.id);
+      await fetchQuizzesList(setQuizzes);
+      logger.info(quizzes);
+
+      Toastr.success("Quiz deleted successfuly");
+      setShowConfirmDeleteModal(false);
+    } catch (error) {
+      handleError(error);
+    }
+  };
 
   const data = React.useMemo(
     () =>
       Object.keys(quizzes).sort((a, b) => quizzes[b].time - quizzes[a].time),
     [quizzes]
   );
+
+  const deleteOnClick = quiz => {
+    setQuiz(quiz);
+    setShowConfirmDeleteModal(true);
+  };
 
   const columns = React.useMemo(
     () => [
@@ -26,8 +47,7 @@ const ListQuizzes = ({ quizzes }) => {
         Cell: ({ row }) => (
           <Link
             to={{
-              pathname: "/quiz/show",
-              state: { quiz: quizzes[row.original] },
+              pathname: `/quiz/${quizzes[row.original].id}/show`,
             }}
           >
             <Typography className="hover:text-blue-600">
@@ -42,10 +62,7 @@ const ListQuizzes = ({ quizzes }) => {
           <Button
             label="edit"
             style="secondary"
-            onClick={() => {
-              setOnFocusQuiz(quizzes[row.original]);
-              setShowEditQuizModal(true);
-            }}
+            to={`/quiz/${quizzes[row.original].id}/edit`}
           />
         ),
       },
@@ -56,8 +73,7 @@ const ListQuizzes = ({ quizzes }) => {
             label="delete"
             style="danger"
             onClick={() => {
-              setOnFocusQuiz(quizzes[row.original]);
-              setShowConfirmDeleteModal(true);
+              deleteOnClick(quizzes[row.original]);
             }}
           />
         ),
@@ -72,13 +88,8 @@ const ListQuizzes = ({ quizzes }) => {
 
   return (
     <>
-      <EditQuiz
-        showEditQuizModal={showEditQuizModal}
-        setShowEditQuizModal={setShowEditQuizModal}
-        quiz={onFocusQuiz}
-      />
       <ConfirmDelete
-        quiz={onFocusQuiz}
+        handleDelete={handleDelete}
         showConfirmDeleteModal={showConfirmDeleteModal}
         setShowConfirmDeleteModal={setShowConfirmDeleteModal}
       />
@@ -122,4 +133,4 @@ const ListQuizzes = ({ quizzes }) => {
   );
 };
 
-export default ListQuizzes;
+export default Table;

@@ -5,7 +5,7 @@ Rails.application.routes.draw do
     resource :sessions, only: %i[create destroy]
     resource :users, only: %i[create]
     resources :quizzes do
-      resources :questions, except: %i[show]
+      resources :questions
     end
     resources :reports, only: %i[index]
     get "/reports/export_start", to: "reports#export_start"

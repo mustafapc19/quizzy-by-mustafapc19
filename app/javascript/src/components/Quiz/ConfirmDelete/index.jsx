@@ -1,33 +1,13 @@
 import React from "react";
 
-import { Button, Modal, Toastr, Typography } from "neetoui";
+import { Button, Modal, Typography } from "neetoui";
 import PropTypes from "prop-types";
 
-import questionsApi from "apis/questions";
-import handleError from "common/error";
-
 const ConfirmDelete = ({
-  quiz,
-  question,
   showConfirmDeleteModal,
   setShowConfirmDeleteModal,
-  setQuestions,
+  handleDelete,
 }) => {
-  const handleDelete = async () => {
-    try {
-      await questionsApi.destroy({
-        question_id: question.id,
-        quiz_id: quiz.id,
-      });
-
-      Toastr.success("Question deleted successfuly");
-      setQuestions(old => [...old.filter(item => item.id !== question.id)]);
-      setShowConfirmDeleteModal(false);
-    } catch (error) {
-      handleError(error);
-    }
-  };
-
   const closeModal = () => {
     setShowConfirmDeleteModal(false);
   };
@@ -56,9 +36,7 @@ const ConfirmDelete = ({
 ConfirmDelete.propTypes = {
   showConfirmDeleteModal: PropTypes.bool.isRequired,
   setShowConfirmDeleteModal: PropTypes.func.isRequired,
-  setQuestions: PropTypes.func.isRequired,
-  question: PropTypes.object.isRequired,
-  quiz: PropTypes.object.isRequired,
+  handleDelete: PropTypes.func.isRequired,
 };
 
 export default ConfirmDelete;

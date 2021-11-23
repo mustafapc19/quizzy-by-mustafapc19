@@ -23,6 +23,10 @@ class QuizzesController < ApplicationController
     end
   end
 
+  def show
+    authorize @quiz
+  end
+
   def update
     authorize @quiz
 
