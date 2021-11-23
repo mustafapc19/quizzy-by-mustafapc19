@@ -16,6 +16,10 @@ class QuizPolicy
     check_user_id_and_is_administrator?
   end
 
+  def show?
+    check_user_id_and_is_administrator?
+  end
+
   def update?
     check_user_id_and_is_administrator?
   end
