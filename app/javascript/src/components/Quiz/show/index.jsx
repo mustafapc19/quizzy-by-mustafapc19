@@ -105,7 +105,6 @@ const ShowQuiz = () => {
               <Link
                 to={{
                   pathname: `/quiz/${quiz.id}/question/create`,
-                  state: { quiz: quiz },
                 }}
               >
                 Add questions
@@ -159,7 +158,6 @@ const ShowQuiz = () => {
                       <Link
                         to={{
                           pathname: `/quiz/${quiz.id}/question/${question.id}/edit`,
-                          state: { quiz: quiz, question: question },
                         }}
                       >
                         Edit

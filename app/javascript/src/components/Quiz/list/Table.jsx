@@ -48,7 +48,6 @@ const Table = () => {
           <Link
             to={{
               pathname: `/quiz/${quizzes[row.original].id}/show`,
-              state: { quiz: quizzes[row.original] },
             }}
           >
             <Typography className="hover:text-blue-600">
