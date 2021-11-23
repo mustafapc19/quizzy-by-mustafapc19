@@ -16,7 +16,8 @@ import CreateQuestion from "components/Questions/create";
 import EditQuestion from "components/Questions/edit";
 import ShowQuestions from "components/Questions/show";
 import CreateQuiz from "components/Quiz/create";
-import ShowQuiz from "components/Quiz/show";
+import EditQuiz from "components/Quiz/edit";
+import ListQuiz from "components/Quiz/list";
 import Reports from "components/Reports";
 import ExportDownload from "components/Reports/ExportDownload";
 import ExportProcessing from "components/Reports/ExportProcessing";
@@ -97,6 +98,12 @@ const App = () => {
                 component={Reports}
               />
               <PrivateRoute
+                path="/quiz/:quizId/edit"
+                redirectRoute="/login"
+                condition={!isLoggedIn}
+                component={EditQuiz}
+              />
+              <PrivateRoute
                 path="/quiz/show"
                 redirectRoute="/login"
                 condition={!isLoggedIn}
@@ -124,7 +131,7 @@ const App = () => {
                 path="/"
                 redirectRoute="/login"
                 condition={!isLoggedIn}
-                component={ShowQuiz}
+                component={ListQuiz}
               />
             </Switch>
             <ToastContainer />

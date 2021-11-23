@@ -2,35 +2,18 @@ import React, { useEffect } from "react";
 
 import { Button } from "neetoui";
 
-import quizzesApi from "apis/quizzes";
 import ShowLoading from "components/Common/ShowLoading";
 import { useQuizzes } from "contexts/quizzes";
 
-import ListQuizzes from "./ListQuizzes";
+import Table from "./Table";
 
-const ShowQuiz = () => {
+import { fetchQuizzesList } from "../common";
+
+const ListQuiz = () => {
   const [quizzes, setQuizzes] = useQuizzes();
   const [loading, setLoading] = React.useState(true);
 
-  useEffect(async () => {
-    try {
-      const response = await quizzesApi.list();
-      let quizzes = {};
-      response.data.quizzes.forEach(quiz => {
-        const date = new Date(quiz.created_at);
-        quiz.time = date.getTime();
-        quizzes[quiz.id] = quiz;
-      });
-      setQuizzes(quizzes);
-      setLoading(false);
-    } catch (error) {
-      logger.error(error);
-    }
-  }, []);
-
-  const handleNewQuiz = () => {
-    window.location.href = "/quiz/create";
-  };
+  useEffect(() => fetchQuizzesList(setQuizzes, setLoading), []);
 
   return loading ? (
     <ShowLoading />
@@ -41,7 +24,7 @@ const ShowQuiz = () => {
           className="flex"
           size="large"
           label="Add new quiz"
-          onClick={handleNewQuiz}
+          to="/quiz/create"
         />
       </div>
       {Object.keys(quizzes).length === 0 ? (
@@ -49,10 +32,10 @@ const ShowQuiz = () => {
           You have not created any quiz
         </div>
       ) : (
-        <ListQuizzes quizzes={quizzes} />
+        <Table quizzes={quizzes} />
       )}
     </div>
   );
 };
 
-export default ShowQuiz;
+export default ListQuiz;

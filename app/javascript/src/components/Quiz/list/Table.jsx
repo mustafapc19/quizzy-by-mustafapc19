@@ -6,18 +6,20 @@ import { useTable } from "react-table";
 
 import ConfirmDelete from "./ConfirmDelete";
 
-import EditQuiz from "../edit";
-
-const ListQuizzes = ({ quizzes }) => {
-  const [showEditQuizModal, setShowEditQuizModal] = useState(false);
+const Table = ({ quizzes }) => {
   const [showConfirmDeleteModal, setShowConfirmDeleteModal] = useState(false);
-  const [onFocusQuiz, setOnFocusQuiz] = useState({});
+  const [quiz, setQuiz] = useState({});
 
   const data = React.useMemo(
     () =>
       Object.keys(quizzes).sort((a, b) => quizzes[b].time - quizzes[a].time),
     [quizzes]
   );
+
+  const deleteOnClick = quiz => {
+    setQuiz(quiz);
+    setShowConfirmDeleteModal(true);
+  };
 
   const columns = React.useMemo(
     () => [
@@ -42,10 +44,7 @@ const ListQuizzes = ({ quizzes }) => {
           <Button
             label="edit"
             style="secondary"
-            onClick={() => {
-              setOnFocusQuiz(quizzes[row.original]);
-              setShowEditQuizModal(true);
-            }}
+            to={`/quiz/${quizzes[row.original].id}/edit`}
           />
         ),
       },
@@ -56,8 +55,7 @@ const ListQuizzes = ({ quizzes }) => {
             label="delete"
             style="danger"
             onClick={() => {
-              setOnFocusQuiz(quizzes[row.original]);
-              setShowConfirmDeleteModal(true);
+              deleteOnClick(quizzes[row.original]);
             }}
           />
         ),
@@ -72,13 +70,8 @@ const ListQuizzes = ({ quizzes }) => {
 
   return (
     <>
-      <EditQuiz
-        showEditQuizModal={showEditQuizModal}
-        setShowEditQuizModal={setShowEditQuizModal}
-        quiz={onFocusQuiz}
-      />
       <ConfirmDelete
-        quiz={onFocusQuiz}
+        quiz={quiz}
         showConfirmDeleteModal={showConfirmDeleteModal}
         setShowConfirmDeleteModal={setShowConfirmDeleteModal}
       />
@@ -122,4 +115,4 @@ const ListQuizzes = ({ quizzes }) => {
   );
 };
 
-export default ListQuizzes;
+export default Table;

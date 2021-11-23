@@ -7,6 +7,8 @@ import quizzesApi from "apis/quizzes";
 import handleError from "common/error";
 import { useQuizzes } from "contexts/quizzes";
 
+import { fetchQuizzesList } from "../common";
+
 const ConfirmDelete = ({
   quiz,
   showConfirmDeleteModal,
@@ -17,9 +19,8 @@ const ConfirmDelete = ({
   const handleDelete = async () => {
     try {
       await quizzesApi.destroy(quiz.id);
-      logger.error(quizzes);
-      delete quizzes[quiz.id];
-      setQuizzes({ ...quizzes });
+      await fetchQuizzesList(setQuizzes);
+      logger.info(quizzes);
 
       Toastr.success("Quiz deleted successfuly");
       setShowConfirmDeleteModal(false);

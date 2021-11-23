@@ -2,7 +2,7 @@ import React from "react";
 
 import { Typography } from "neetoui";
 
-import CreateQuizForm from "./CreateQuizForm";
+import QuizForm from "../Form";
 
 const CreateQuiz = () => {
   return (
@@ -10,7 +10,7 @@ const CreateQuiz = () => {
       <div className="flex flex-row justify-start">
         <Typography style="h2">Add new quiz</Typography>
       </div>
-      <CreateQuizForm />
+      <QuizForm />
     </div>
   );
 };
